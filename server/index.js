@@ -22,4 +22,4 @@ var ticker = new Ticker();
 
 ticker.updateAll();
 
-app.listen(1337, () => console.log('start 3000'));
+app.listen(1337, () => console.log('start 3000')); 
