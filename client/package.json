@@ -1,0 +1,31 @@
+{
+  "name": "client",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "test": "jest",
+    "android-linux": "react-native bundle --platform android --dev true --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res && react-native run-android"
+  },
+  "dependencies": {
+    "parse": "^1.11.1",
+    "react": "16.3.1",
+    "react-native": "0.55.2",
+    "react-native-fbsdk": "^0.7.0",
+    "react-native-swiper": "^1.5.13",
+    "react-native-textinput-effects": "^0.4.2",
+    "react-native-vector-icons": "^4.6.0",
+    "react-navigation": "^1.5.11",
+    "react-redux": "^5.0.7",
+    "redux": "^3.7.2"
+  },
+  "devDependencies": {
+    "babel-jest": "22.4.3",
+    "babel-preset-react-native": "4.0.0",
+    "jest": "22.4.3",
+    "react-test-renderer": "16.3.1"
+  },
+  "jest": {
+    "preset": "react-native"
+  }
+}
