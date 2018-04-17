@@ -13,4 +13,13 @@ var api = new ParseServer({
 // Serve the Parse API at /parse URL prefix
 app.use('/parse', api);
 
-app.listen(3000, () => console.log('start 3000'));
+app.get('/all', (req, res) => {
+
+})
+
+var Ticker = require('./Ticker');
+var ticker = new Ticker();
+
+ticker.updateAll();
+
+app.listen(1337, () => console.log('start 3000'));

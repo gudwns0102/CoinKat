@@ -1,6 +1,8 @@
 import React from 'react'
 import { StyleSheet, View, Text, Alert } from 'react-native';
+import { withNavigation } from 'react-navigation';
 
+import * as Components from '../components/';
 class BoardScreen extends React.Component {
 
   constructor(props){
@@ -9,13 +11,19 @@ class BoardScreen extends React.Component {
   }
 
   componentDidMount(){
-    
+
   }
 
   render(){
     return(
       <View style={styles.container}>
-        <Text>This is BoardScreen</Text>
+        <Components.BoardRow 
+          name={'BTC'}
+          data={{
+            buy_price: 1000,
+            opening_price: 1500000,
+          }}
+        />
       </View>
     );
   }
@@ -30,4 +38,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default BoardScreen;
+export default withNavigation(BoardScreen);

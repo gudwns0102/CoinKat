@@ -2,6 +2,8 @@ import React from 'react'
 import { StyleSheet, View, Text, Image, AsyncStorage } from 'react-native';
 import Parse from 'parse/react-native';
 
+import { withNavigation } from 'react-navigation';
+
 class FetchScreen extends React.Component {
 
   constructor(props){
@@ -12,7 +14,7 @@ class FetchScreen extends React.Component {
   componentDidMount(){
     Parse.setAsyncStorage(AsyncStorage);
 
-    Parse.initialize('QWDUKSHKDWOP@osfight$HOFNDSESL#L');
+    Parse.initialize('QWDUKSHKDWOP@coinkat$HOFNDSESL#L');
     Parse.serverURL = 'http://13.125.101.187:1337/parse';
 
     Parse.User.enableUnsafeCurrentUser();
@@ -42,4 +44,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default FetchScreen;
+export default withNavigation(FetchScreen);

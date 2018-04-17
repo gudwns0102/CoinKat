@@ -19,6 +19,10 @@ import { Sae } from 'react-native-textinput-effects';
 import * as actions from '../actions';
 import { connect } from 'react-redux';
 
+import FBSDK, { LoginButton, AccessToken, LoginManager, GraphRequest, GraphRequestManager } from 'react-native-fbsdk';
+import Parse from 'parse/react-native';
+
+import { withNavigation } from 'react-navigation';
 
 class LoginScreen extends React.Component{
 
@@ -72,6 +76,38 @@ class LoginScreen extends React.Component{
         duration: 600,
       }
     ).start();
+  }
+
+  handleFacebookLogin = (data) => {
+    const { navigation } = this.props;
+    const { userID, accessToken, expirationTime } = data;
+    var authData = {
+      id: userID,
+      access_token: accessToken,
+      expiration_date: expirationTime
+    };
+
+    Parse.FacebookUtils.logIn(authData, {
+      success: (user) => {
+        navigation.navigate('MainStack');
+      },
+      error : (user, error) => {
+        console.log(error);
+        LoginManager.logOut();
+        switch (error.code) {
+          case Parse.Error.INVALID_SESSION_TOKEN:
+            Parse.User.logOut().then(() => {
+              this.onFacebookLogin(token);
+            });
+            break;
+
+          default: {
+            console.log(error);
+            alert("error");
+          }
+        }
+      }
+    })
   }
 
   render(){
@@ -156,6 +192,24 @@ class LoginScreen extends React.Component{
         </TouchableOpacity>
       )
 
+      const facebookButton = 
+      <LoginButton
+        style={{width: '80%', height: 30}}
+        publishPermissions={["publish_actions"]}
+        onLoginFinished={
+          (error, result) => {
+            if (error) {
+              alert("login has error: " + result.error);
+            } else if (result.isCancelled) {
+              alert("login is cancelled.");
+            } else {
+              AccessToken.getCurrentAccessToken()
+              .then(this.handleFacebookLogin)
+            }
+          }
+        }
+        onLogoutFinished={this.handleFacebookLogout}/>
+
       return(          
         <ImageBackground
           source={require('../../assets/images/login.png')}
@@ -171,10 +225,11 @@ class LoginScreen extends React.Component{
               <Animated.View style={{flex: 1, alignItems:'center'}}>
                 {usernameTextInput}
                 {passwordTextInput}
-                <View style={{marginTop: 20, width:'80%', height: 30, flexDirection:'row'}}>
+                <View style={{marginTop: 20, marginBottom: 20, width:'80%', height: 30, flexDirection:'row'}}>
                   {loginButton}
                   {RegisterButton}
                 </View>
+                {facebookButton}
               </Animated.View>
             </Animated.View>
           </TouchableWithoutFeedback>
@@ -191,4 +246,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default LoginScreen;
+export default withNavigation(LoginScreen);
