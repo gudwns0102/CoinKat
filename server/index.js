@@ -14,12 +14,10 @@ var api = new ParseServer({
 app.use('/parse', api);
 
 app.get('/all', (req, res) => {
-
+  res.send(ticker.data);
 })
 
 var Ticker = require('./Ticker');
 var ticker = new Ticker();
-
-ticker.updateAll();
 
 app.listen(1337, () => console.log('start 3000')); 
