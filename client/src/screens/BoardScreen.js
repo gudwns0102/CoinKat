@@ -11,6 +11,7 @@ class BoardScreen extends React.Component {
 
   constructor(props){
     super(props);
+
   }
 
   componentDidMount(){
@@ -34,7 +35,9 @@ class BoardScreen extends React.Component {
 
     return(
       <View style={styles.container}>
-        <Components.Board data={items}/>
+        <Components.Board 
+          data={items} 
+          callback={(exchange, name) => this.props.navigation.navigate('CoinDetailScreen', {exchange, name})}/>
       </View>
     );
   }

@@ -10,7 +10,8 @@ const DrawerStack = DrawerNavigator(
   {
     BoardScreen: {screen: () => <Screens.BoardScreen />},
     AvatarSelectScreen: {screen: () => <Screens.AvatarSelectScreen />},
-    CoinAddScreen: {screen: () => <Screens.CoinAddScreen />}
+    CoinAddScreen: {screen: () => <Screens.CoinAddScreen />},
+    CoinDetailScreen: {screen: () => <Screens.CoinDetailScreen />}
   },
   {
     contentComponent: ({navigation}) => (

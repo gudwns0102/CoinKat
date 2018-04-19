@@ -4,6 +4,9 @@ import Board from './Board';
 import CKHeader from './CKHeader';
 import CKDrawer from './CKDrawer';
 import CKController from './CKController';
+import CKPicker from './CKPicker';
+
+import NewsRow from './NewsRow';
 
 export {
   BoardRow,
@@ -11,4 +14,6 @@ export {
   CKHeader,
   CKDrawer,
   CKController,
+  CKPicker,
+  NewsRow,
 }

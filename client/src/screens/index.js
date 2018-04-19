@@ -4,6 +4,7 @@ import RegisterScreen from './RegisterScreen';
 import BoardScreen from './BoardScreen';
 import AvatarSelectScreen from './AvatarSelectScreen';
 import CoinAddScreen from './CoinAddScreen';
+import CoinDetailScreen from './CoinDetailScreen';
 
 export {
   FetchScreen,
@@ -12,4 +13,5 @@ export {
   BoardScreen,
   AvatarSelectScreen,
   CoinAddScreen,
+  CoinDetailScreen,
 }

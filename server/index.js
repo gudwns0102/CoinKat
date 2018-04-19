@@ -46,40 +46,6 @@ fcm.send(push_data, function(err, response) {
   console.log(response);
 });
 
-
-fetch('https://fcm.googleapis.com/fcm/send', {
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "key="+myKey,
-        },
-        method: 'POST',
-        json: true,
-        body: {
-          "to": token,
-          "data": {
-            "custom_notification": {
-              "title": "Simple FCM Client",
-              "body": "This is a notification with only NOTIFICATION.",
-              "sound": "default",
-              "priority": "high",
-              "show_in_foreground": true
-            }
-          },
-          "priority": 10
-        }
-      }, (error, response, body) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve({
-            response: response,
-            body: body
-          });
-        }
-});
-
-
-
 // Serve the Parse API at /parse URL prefix
 app.use('/parse', api);
 

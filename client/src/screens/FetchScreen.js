@@ -35,7 +35,6 @@ class FetchScreen extends React.Component {
       console.log(error);
     })
 
-
     var user = await Parse.User.currentAsync();
     var { data } = await axios.get('http://13.125.101.187:1337/all');
     var avatar = await AsyncStorage.getItem('avatar');

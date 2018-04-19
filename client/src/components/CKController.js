@@ -39,9 +39,11 @@ class CKController extends React.Component {
         this.state.pan.setValue({x: 0, y: 0});
       },
   
-      onPanResponderMove: Animated.event([
-        null, {dx: this.state.pan.x, dy: this.state.pan.y},
-      ]),
+      onPanResponderMove: (e, gestureState) => {
+        return Animated.event([
+          null, {dx: this.state.pan.x, dy: this.state.pan.y},
+        ])(e, gestureState)
+      },
   
       onPanResponderRelease: (e, { vx, vy }) => {
         // Flatten the offset to avoid erratic behavior

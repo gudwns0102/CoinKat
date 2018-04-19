@@ -1,4 +1,4 @@
-export default function translate(input, option){
+export default function translate2Korean(input, option){
     switch(input){
         case 'BTC':
             return '비트코인';

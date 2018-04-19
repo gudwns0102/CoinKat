@@ -20,6 +20,7 @@ export default getHeaderImage = (name) => {
        'ELF': require('../../assets/images/coin/ELF.png'),      
        'MITH':require('../../assets/images/coin/MITH.png'),    
        'OMG': require('../../assets/images/coin/OMG.png'),
+       'MCO': require('../../assets/images/coin/MCO.png'),
   }
  
   return name2img[name];
