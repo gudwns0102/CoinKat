@@ -8,7 +8,7 @@ class CKPicker extends React.Component {
     super(props);
 
     this.state = {
-      pan: new Animated.ValueXY(),
+      pan: new Animated.ValueXY({x: 35*width/720, y: 0}),
       dx: 0,
       dy: 0,
       value1: 0,

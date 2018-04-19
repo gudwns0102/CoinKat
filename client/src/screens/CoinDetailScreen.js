@@ -14,6 +14,8 @@ import axios from 'axios';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
+import PubSub from 'pubsub-js';
+
 const { width, height } = Dimensions.get('window');
 const googleAPIKey = '232338aa4c4d4bfca82d9fada0000db3';
 
@@ -52,6 +54,9 @@ class CoinDetailScreen extends React.Component {
   }
 
   componentDidMount(){
+    this.token = PubSub.subscribe('CKControllerPress', () => {
+      this.props.navigation.navigate('BoardScreen');
+    })
     const { name } = this.props.navigation.state.params;
     this.props.setNav(this.props.navigation);
     axios.get(`https://newsapi.org/v2/everything?q=${translate2Origin(name)}&apiKey=${googleAPIKey}`)
@@ -106,9 +111,9 @@ class CoinDetailScreen extends React.Component {
           </View>
           {newsView}
         </View>
-        <View style={{width: '95%', flex: 1, backgroundColor:'white', marginTop: 10, marginBottom: 10, borderRadius: 10, flexDirection:'row', alignItems:'center'}}>
+        <View style={{width: '95%', flex: 1, backgroundColor:'white', marginTop: 10, marginBottom: 10, paddingTop: 10, paddingBottom: 10, borderRadius: 10, flexDirection:'row', alignItems:'center'}}>
           <Components.CKPicker 
-            style={{marginLeft: 10, marginRight: 20, height: '80%'}}
+            style={{marginLeft: 10, marginRight: 20, height: '100%', borderRadius: 10}}
             radius={60} 
             initialValue={5} 
             range={{upper: 15, lower: 5}} 
@@ -118,9 +123,12 @@ class CoinDetailScreen extends React.Component {
             <Text style={{fontFamily:'Comfortaa-Regular', lineHeight: 30}}>
               <Text>We'll send you push{'\n'}</Text>
               <Text>For <Text style={{textDecorationLine: 'underline', fontWeight:'bold', fontSize:20}}>{exchange} {name}{'\n'}</Text>If the price is: {'\n'}</Text>
-              <Text style={{flex: 1, textAlign:'center'}}>rise {toLocaleString(parseInt(data.currentPrice * (1 + this.state.upPercent/100)))}{'\n'}</Text>
+              <Text style={{flex: 1, textAlign:'center'}}>rise up to {toLocaleString(parseInt(data.currentPrice * (1 + this.state.upPercent/100)))}{'\n'}</Text>
               <Text style={{flex: 1, textAlign:'center'}}>come down {toLocaleString(parseInt(data.currentPrice * (1 - this.state.downPercent/100)))}{'\n'}</Text>
             </Text>
+            <TouchableOpacity style={styles.registerBtn}>
+              <Text>Register Push</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </View>
@@ -137,7 +145,7 @@ const styles = StyleSheet.create({
 
   boardRowWrapper: {
     width:'95%',
-    height: '15%',
+    height: '12%',
     backgroundColor:'white',
     alignItems:'center',
     justifyContent:'center',
@@ -153,7 +161,7 @@ const styles = StyleSheet.create({
 
   newsWrapper: {
     width:'95%',
-    height: '40%',
+    height: '45%',
     backgroundColor:'white',
     borderTopLeftRadius: 10,
     borderBottomLeftRadius: 10,
@@ -174,8 +182,16 @@ const styles = StyleSheet.create({
   alarmTextBox: {
     height: '100%',
     flex: 1,
-    paddingTop: '5%',
-    paddingBottom: '5%',
+    justifyContent:'space-between'
+  },
+
+  registerBtn:{
+    width:'90%',
+    flex: 1,
+    borderWidth: 0.5,
+    borderColor: 'gray',
+    alignItems:'center',
+    justifyContent:'center',
   }
 })
 

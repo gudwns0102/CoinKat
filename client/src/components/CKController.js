@@ -57,13 +57,13 @@ class CKController extends React.Component {
       transform: this.state.pan.getTranslateTransform()
     }
     
-    const boardScreenBtn = (
+    const BoardScreenBtn = (
       <TouchableOpacity onPress={() => this.props.navigation.navigate('CoinAddScreen')} style={{width:'100%', flex: 1, alignItems:'center', justifyContent:'center'}}> 
         <Ionicons name='ios-add' size={25} />
       </TouchableOpacity>
     );
 
-    const coinAddScreenBtn = (
+    const CoinAddScreenBtn = (
       <TouchableOpacity 
         onPress={() => PubSub.publish('CKControllerPress')} 
         style={[
@@ -86,7 +86,13 @@ class CKController extends React.Component {
       </TouchableOpacity>
     );
 
-    const avatarSelectScreenBtn = (
+    const AvatarSelectScreenBtn = (
+      <TouchableOpacity onPress={() => PubSub.publish('CKControllerPress')} style={{width:'100%', flex: 1, alignItems:'center', justifyContent:'center'}}> 
+        <Ionicons name='ios-close' size={25} />
+      </TouchableOpacity>
+    );
+
+    const CoinDetailScreenBtn = (
       <TouchableOpacity onPress={() => PubSub.publish('CKControllerPress')} style={{width:'100%', flex: 1, alignItems:'center', justifyContent:'center'}}> 
         <Ionicons name='ios-close' size={25} />
       </TouchableOpacity>
@@ -96,17 +102,18 @@ class CKController extends React.Component {
     var btn;
 
     if(nav == null){
-      btn = boardScreenBtn;
+      btn = BoardScreenBtn;
     } else {
       var route = nav.state.key;
-      
+      btn = eval(route + 'Btn');
+      /*
       if(route == 'BoardScreen'){
-        btn = boardScreenBtn;
+        btn = BoardScreenBtn;
       } else if(route == 'CoinAddScreen'){
-        btn = coinAddScreenBtn;
+        btn = CoinAddScreenBtn;
       } else if(route == 'AvatarSelectScreen'){
-        btn = avatarSelectScreenBtn;
-      }
+        btn = AvatarSelectScreenBtn;
+      }*/
     }
       
     return (
