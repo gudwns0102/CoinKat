@@ -35,14 +35,6 @@ class FetchScreen extends React.Component {
       console.log(error);
     })
 
-    FCM.requestPermissions();
-    FCM.getFCMToken().then(token => {
-      console.log("TOKEN (getFCMToken)", token);
-    });
-    FCM.getInitialNotification().then(notif => {
-      console.log("INITIAL NOTIFICATION", notif)
-    });
-    
 
     var user = await Parse.User.currentAsync();
     var { data } = await axios.get('http://13.125.101.187:1337/all');
