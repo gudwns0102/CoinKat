@@ -8,25 +8,13 @@ var api = new ParseServer({
   appId: 'QWDUKSHKDWOP@coinkat$HOFNDSESL#L',
   fileKey: 'myFileKey',
   masterKey: 'AOWHDDKNKLLR$@303k',
-  push: {
-    android: {
-      senderId: '1519459543887',
-      apiKey: '	AIzaSyBsEiJH9M_FUwHkdtW0ptd9DbDVw87bShY',
-    },
-    ios: {
-      pfx: '/file/path/to/XXX.p12',
-      passphrase: '', // optional password to your p12/PFX
-      bundleId: '',
-      production: false
-    }
-  }
 });
 
 var FCM = require('fcm-node');
 var fcm = new FCM('AAAAcmJLzBY:APA91bF2x1IhD0HipgY7MY3ovle_fkizJEXJvK8s2kEAP-JPBa31i2zViSAT3OOD3EN84r4MoHat_2llwXiI67y7VkR760oSoSyzcucptu6VRaLY_lJTTYAXQE3Rjp43H_5empiNyjWj');
 
 var push_data = {
-  to: 'f2Hz1j_afP0:APA91bHzgD9GReXajQdJuC8l87NbFmUxNIOXwxWpEwzwurHPYNj2fWoSDVj4bnNKxMrfcR5UQU048f7y9uC9eKExm1Z7OK6qeWxCGL8-DV7rXHjx1ZkNhpnHOgkJNQqgzP089LUqE4P9';
+  to: 'f2Hz1j_afP0:APA91bHzgD9GReXajQdJuC8l87NbFmUxNIOXwxWpEwzwurHPYNj2fWoSDVj4bnNKxMrfcR5UQU048f7y9uC9eKExm1Z7OK6qeWxCGL8-DV7rXHjx1ZkNhpnHOgkJNQqgzP089LUqE4P9',
   notification: {
     title: "Hello Node",
     body: "Node로 발송하는 Push 메시지 입니다.",
