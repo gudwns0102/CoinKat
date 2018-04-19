@@ -7,9 +7,6 @@ import * as Components from '../components/';
 import { connect } from 'react-redux';
 import * as actions from '../actions';
 
-import FCM from 'react-native-fcm';
-
-
 class BoardScreen extends React.Component {
 
   constructor(props){
@@ -17,7 +14,6 @@ class BoardScreen extends React.Component {
   }
 
   componentDidMount(){
-    FCM.getFCMToken().then(token => console.log(token));
     this.props.setNav(this.props.navigation);
   }
 

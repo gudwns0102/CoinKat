@@ -9,6 +9,8 @@ import * as actions from '../actions';
 
 import axios from 'axios';
 
+import FCM, { FCMEvent, RemoteNotificationResult } from 'react-native-fcm';
+
 class FetchScreen extends React.Component {
 
   constructor(props){
@@ -33,6 +35,15 @@ class FetchScreen extends React.Component {
       console.log(error);
     })
 
+    FCM.requestPermissions();
+    FCM.getFCMToken().then(token => {
+      console.log("TOKEN (getFCMToken)", token);
+    });
+    FCM.getInitialNotification().then(notif => {
+      console.log("INITIAL NOTIFICATION", notif)
+    });
+    
+
     var user = await Parse.User.currentAsync();
     var { data } = await axios.get('http://13.125.101.187:1337/all');
     var avatar = await AsyncStorage.getItem('avatar');
@@ -52,6 +63,7 @@ class FetchScreen extends React.Component {
       var { data } = await axios.get('http://13.125.101.187:1337/all');
       this.props.setCoin(data);
     }, 3000)
+
   }
 
   render(){

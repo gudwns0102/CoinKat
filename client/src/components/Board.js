@@ -50,6 +50,15 @@ class Board extends React.Component {
           this.setState({order});
         }}
         renderRow={row => {
+          if(!row){
+            row = {
+              name: 'BTC',
+              data: {
+                currentPrice: 1,
+                openPrice: 1,
+              }
+            }
+          }
           return <TouchableHighlight style={{flex: 1, width}}>
             <BoardRow name={row.name} data={row.data} />
           </TouchableHighlight>
