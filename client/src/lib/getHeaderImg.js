@@ -53,6 +53,30 @@ export default getHeaderImage = (name) => {
           return require('../../assets/images/coin/IOTA.png');
       }
 
+      case 'ICX': {
+          return require('../../assets/images/coin/ICX.png')
+      }
+
+      case 'VEN': {
+        return require('../../assets/images/coin/VEN.png')
+      }
+
+      case 'TRX': {
+        return require('../../assets/images/coin/TRX.png')
+      }
+
+      case 'ELF': {
+        return require('../../assets/images/coin/ELF.png')
+      }
+
+      case 'MITH': {
+        return require('../../assets/images/coin/MITH.png')
+      }
+
+      case 'OMG': {
+        return require('../../assets/images/coin/OMG.png')
+      }
+
       default:
           return;
   }

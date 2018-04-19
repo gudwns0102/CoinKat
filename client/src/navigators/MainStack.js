@@ -1,21 +1,38 @@
 import React from 'react';
-import { TabNavigator } from 'react-navigation';
+import { View, Text } from 'react-native';
+import { StackNavigator, DrawerNavigator } from 'react-navigation';
 
 import * as Screens from '../screens';
+import * as Components from '../components';
+import { AvatarSelectScreen } from '../screens';
 
-const MainStack = TabNavigator(
+const DrawerStack = DrawerNavigator(
   {
-    Board: {screen: () => <Screens.BoardScreen />},
+    BoardScreen: {screen: () => <Screens.BoardScreen />},
+    AvatarSelectScreen: {screen: () => <Screens.AvatarSelectScreen />},
+    CoinAddScreen: {screen: () => <Screens.CoinAddScreen />}
   },
   {
-    tabBarPosition: 'bottom',
-    swipeEnabled: true,
-    animationEnabled: true,
-    lazy: false,
-    removeClippedSubviews: true,
-    tabBarOptions: {
-    
-    }
+    contentComponent: ({navigation}) => (
+      <View style={{width:'100%', flex: 1}}>
+        <Components.CKDrawer navigation={navigation}/>
+      </View>
+    ),
+  }
+)
+
+const MainStack = StackNavigator(
+  {
+    Drawer: {screen: DrawerStack},
+  },
+  {
+    navigationOptions: ({navigation}) => ({
+      header: (
+        <View style={{width:'100%', height:'8%', alignItems:'center', justifyContent:'center'}}>
+          <Components.CKHeader navigation={navigation}/>
+        </View>
+      ),
+    })
   }
 );
 

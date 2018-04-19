@@ -1,12 +1,15 @@
-import * as actionTypes from './actionTypes';
+const GET_COIN = "GET_COIN";
+const SET_COIN = "SET_COIN";
 
-function setOption(option){
-  return {
-    type: actionTypes.SET_OPTION,
-    option,
-  }
-}
+const GET_AVATAR = "GET_AVATAR";
+const SET_AVATAR = "SET_AVATAR";
+
+const SET_NAV = "SET_NAV";
 
 export {
-  setOption,
+  GET_COIN,
+  SET_COIN,
+  GET_AVATAR,
+  SET_AVATAR,
+  SET_NAV
 }

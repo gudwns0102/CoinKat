@@ -1,29 +1,41 @@
 import React from 'react'
-import { StyleSheet, View, Text, Alert } from 'react-native';
+import { StyleSheet, View, Text, Alert, TouchableOpacity } from 'react-native';
 import { withNavigation } from 'react-navigation';
 
 import * as Components from '../components/';
+
+import { connect } from 'react-redux';
+import * as actions from '../actions';
+
+
 class BoardScreen extends React.Component {
 
   constructor(props){
     super(props);
-
   }
 
   componentDidMount(){
-
+    this.props.setNav(this.props.navigation);
   }
 
   render(){
+    var data = this.props.coinData;
+    var items = {};
+
+    Object.keys(data).map(exchange => {
+      Object.keys(data[exchange]).map(name => {
+        var key = exchange + '-' + name;
+        items[key] = {
+          exchange,
+          name,
+          data: data[exchange][name],
+        };
+      })
+    })
+
     return(
       <View style={styles.container}>
-        <Components.BoardRow 
-          name={'BTC'}
-          data={{
-            buy_price: 1000,
-            opening_price: 1500000,
-          }}
-        />
+        <Components.Board data={items}/>
       </View>
     );
   }
@@ -38,4 +50,17 @@ const styles = StyleSheet.create({
   }
 })
 
-export default withNavigation(BoardScreen);
+const mapStateToProps = (state) => {
+  return {
+    coinData: state.coinReducer.coinData,
+  };
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setCoin: coinData => dispatch(actions.setCoin(coinData)),
+    setNav: nav => dispatch(actions.setNav(nav))
+  };
+}
+
+export default withNavigation(connect(mapStateToProps, mapDispatchToProps)(BoardScreen));

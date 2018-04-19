@@ -12,6 +12,8 @@ import {
   View
 } from 'react-native';
 
+import * as Components from './src/components';
+
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 
@@ -24,7 +26,9 @@ export default class App extends Component {
   render() {
     return (
       <Provider store={store}>
-        <RootNavigator />
+        <View style={{width:'100%', flex: 1}}>
+          <RootNavigator />
+        </View>
       </Provider>
     );
   }
