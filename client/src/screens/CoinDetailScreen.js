@@ -106,7 +106,23 @@ class CoinDetailScreen extends React.Component {
           </View>
           {newsView}
         </View>
-        <Components.CKPicker radius={60} initialValue={5} range={{upper: 15, lower: 5}} step={0.1} callback={(upPercent, downPercent) => this.setState({upPercent, downPercent})}/>
+        <View style={{width: '95%', flex: 1, backgroundColor:'white', marginTop: 10, marginBottom: 10, borderRadius: 10, flexDirection:'row', alignItems:'center'}}>
+          <Components.CKPicker 
+            style={{marginLeft: 10, marginRight: 20, height: '80%'}}
+            radius={60} 
+            initialValue={5} 
+            range={{upper: 15, lower: 5}} 
+            step={0.1} 
+            callback={(upPercent, downPercent) => this.setState({upPercent, downPercent})}/>
+          <View style={styles.alarmTextBox}>
+            <Text style={{fontFamily:'Comfortaa-Regular', lineHeight: 30}}>
+              <Text>We'll send you push{'\n'}</Text>
+              <Text>For <Text style={{textDecorationLine: 'underline', fontWeight:'bold', fontSize:20}}>{exchange} {name}{'\n'}</Text>If the price is: {'\n'}</Text>
+              <Text style={{flex: 1, textAlign:'center'}}>rise {toLocaleString(parseInt(data.currentPrice * (1 + this.state.upPercent/100)))}{'\n'}</Text>
+              <Text style={{flex: 1, textAlign:'center'}}>come down {toLocaleString(parseInt(data.currentPrice * (1 - this.state.downPercent/100)))}{'\n'}</Text>
+            </Text>
+          </View>
+        </View>
       </View>
     );
   }
@@ -153,6 +169,13 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection:'row',
     alignItems:'center'
+  },
+
+  alarmTextBox: {
+    height: '100%',
+    flex: 1,
+    paddingTop: '5%',
+    paddingBottom: '5%',
   }
 })
 

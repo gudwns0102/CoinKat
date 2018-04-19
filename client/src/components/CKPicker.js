@@ -104,7 +104,7 @@ class CKPicker extends React.Component {
     const view1 = (
       <TouchableOpacity style={{width:'100%', height:'100%', alignItems:'center', justifyContent:'center', 
       borderWidth: 10, 
-      borderColor:'pink',}}>
+      borderColor:'rgba(209, 68, 68, 0.979)',}}>
         <Text style={{fontSize: r/2, fontWeight: 'bold'}}>{value1}%</Text>
       </TouchableOpacity>
     );
@@ -112,7 +112,7 @@ class CKPicker extends React.Component {
     const view2 = (
       <TouchableOpacity style={{width:'100%', height:'100%', alignItems:'center', justifyContent:'center',
       borderWidth: 10, 
-      borderColor:'green',
+      borderColor:'rgba(60, 63, 196, 0.979)',
       transform:[
         {rotateY: 180/360*2*Math.PI}
       ]}}>
@@ -124,7 +124,7 @@ class CKPicker extends React.Component {
     const currentView = currentRotateQuote % 2 == 0 ? view1 : view2;
 
     return(
-      <Animated.View style={style} {...this._panResponder.panHandlers}>
+      <Animated.View style={[style, this.props.style]} {...this._panResponder.panHandlers}>
         {currentView}
       </Animated.View>
     );
