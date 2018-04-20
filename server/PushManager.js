@@ -18,7 +18,7 @@ class PushManager{
 
   checkAllPush(){
     var pushes = this.pushes;
-    pushes.forEach((push, index, array) => checkPush(push));
+    pushes.forEach((push, index, array) => this.checkPush(push));
   }
 
   checkPush(push){
