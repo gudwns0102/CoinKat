@@ -31,8 +31,8 @@ class PushManager{
     console.log(parent);
   }
 
-  run(){
-    this.updateAllPush();
+  async run(){
+    await this.updateAllPush();
     this.checkAllPush();    
   }
 }
