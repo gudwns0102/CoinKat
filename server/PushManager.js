@@ -6,23 +6,16 @@ var FCM_KEY= 'AAAAcmJLzBY:APA91bF2x1IhD0HipgY7MY3ovle_fkizJEXJvK8s2kEAP-JPBa31i2
 class PushManager{
   constructor(){
     this.fcm = new FCM(FCM_KEY);
-   
-    var Push = Parse.Object.extend("Push");
-    var query = new Parse.Query(Push);
-
-    query.find({
-      success: results => {
-        console.log(results)
-        res.success({code: 100});
-      },
-      error: (err) => {
-        console.log(err)
-        res.error();
-      }
-    })
-    
+  
   }
 
+  async updatePush(){
+    var Push = Parse.Object.extend("Push");
+    var query = new Parse.Query(Push);
+    var pushes = await query.find();
+
+    console.log(pushes);
+  }
 }
 
 module.exports = PushManager;
