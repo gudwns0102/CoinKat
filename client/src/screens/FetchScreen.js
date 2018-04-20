@@ -35,7 +35,11 @@ class FetchScreen extends React.Component {
       console.log(error);
     })
 
+    var FCMToken = await FCM.getFCMToken()
     var user = await Parse.User.currentAsync();
+    user.set('FCMToken', FCMToken);
+    await user.save();
+    
     var { data } = await axios.get('http://13.125.101.187:1337/all');
     var avatar = await AsyncStorage.getItem('avatar');
     var order = await AsyncStorage.getItem('order');

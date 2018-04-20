@@ -1,4 +1,3 @@
-
 var FCM = require('fcm-node');
 var Parse = require('parse/node');
 var FCM_KEY= 'AAAAcmJLzBY:APA91bF2x1IhD0HipgY7MY3ovle_fkizJEXJvK8s2kEAP-JPBa31i2zViSAT3OOD3EN84r4MoHat_2llwXiI67y7VkR760oSoSyzcucptu6VRaLY_lJTTYAXQE3Rjp43H_5empiNyjWj'
@@ -59,6 +58,47 @@ class PushManager{
   }
 
   async handlePushHit(push){
+    
+    var parent = push.get('parent');
+    var exchange = push.get('exchange');
+    var name = push.get('name');
+    var upPrice = push.get('upPrice');
+    var downPrice = push.get('downPrice');
+
+    var FCMToken = parent.get('FCMToken');
+    
+    var { currentPrice } = this.coinData[exchange][name];
+
+    var push_data = {
+      to: token,
+      notification: {
+        title: `${exchange} ${name} Push`,
+        body: `${exchange} ${name}의 현재 가격이 ${currentPrice} 입니다.`,
+        sound: "default",
+        click_action: "FCM_PLUGIN_ACTIVITY",
+        icon: "fcm_push_icon"
+      },
+      priority: "high",
+      // App 패키지 이름
+      restricted_package_name: "com.client",
+      // App에게 전달할 데이터
+      data: {
+        exchange,
+        name,
+      }
+    }
+
+    this.fcm.send(push_data, (err, response) => {
+      if (err) {
+        console.error('Push메시지 발송에 실패했습니다.');
+        console.error(err);
+        return;
+      }
+    
+      console.log('Push메시지가 발송되었습니다.');
+      console.log(response);
+    })
+
     await push.destroy({
       success: obj => {
         console.log('push Deleted')
