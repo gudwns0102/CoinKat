@@ -20,6 +20,7 @@ class PushManager{
       _p_parent: {type: Object, required: true}
     },
     {
+      collection: 'Push',
       timeStamp: true
     });
 
@@ -29,7 +30,7 @@ class PushManager{
 
     const Push = mongoose.model('Push', pushSchema);
 
-    Push.findAll();
+    Push.findAll().then(result => console.log(result));
   }
 
 }
