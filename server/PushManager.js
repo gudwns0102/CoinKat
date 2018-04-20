@@ -1,4 +1,3 @@
-
 var FCM = require('fcm-node');
 var Parse = require('parse/node');
 var FCM_KEY= 'AAAAcmJLzBY:APA91bF2x1IhD0HipgY7MY3ovle_fkizJEXJvK8s2kEAP-JPBa31i2zViSAT3OOD3EN84r4MoHat_2llwXiI67y7VkR760oSoSyzcucptu6VRaLY_lJTTYAXQE3Rjp43H_5empiNyjWj'
@@ -9,13 +8,16 @@ class PushManager{
   constructor(){
     this.fcm = new FCM(FCM_KEY);
 
-    this.run();
-
-    PubSub.subscribe('responseCoinData', (result) => {
-      console.log(result);
+    PubSub.subscribe('responseCoinData', (msg, data) => {
+      this.coinData = data;
+      console.log(data);
     })
 
-    setTimeout(this.requestCoinData, 3000);
+    this.temp = PubSub.subscribe('coinDataReady', () => {
+      PubSub.unsubscribe(this.temp);
+      console.log('PushManager run!');
+      this.run();
+    })
   }
 
   requestCoinData(){
@@ -30,18 +32,25 @@ class PushManager{
 
   checkAllPush(){
     var pushes = this.pushes;
+    console.log(pushes);
     pushes.forEach((push, index, array) => this.checkPush(push));
   }
 
   checkPush(push){
+    console.log('checkPush star!')
     var parent = push.get('parent');
     var exchange = push.get('exchange');
     var name = push.get('name');
     var upPrice = push.get('upPrice');
     var downPrice = push.get('downPrice');
+
+    var curretPrice = this.coinData[exchange][name];
+
+    console.log(currentPrice)
   }
 
   async run(){
+    this.requestCoinData();
     await this.updateAllPush();
     this.checkAllPush();    
   }

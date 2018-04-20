@@ -1,6 +1,6 @@
 var axios = require('axios');
 var PubSub = require('pubsub-js');
-
+var { setTimeout } = require('timers');
 class Ticker {
   constructor(){
     this.data = {
@@ -8,14 +8,18 @@ class Ticker {
       coinone: {},
     }
 
+    PubSub.subscribe('requestCoinData', () => {
+      PubSub.publish('responseCoinData', this.data);
+    })
+
+    this.updateAll()
+
     setInterval(() => {
       console.log('Fetch API')
       this.updateAll();
     }, 3000);
 
-    PubSub.subscribe('requestCoinData', () => {
-      Pusbsub.publish('responseCoinData', this.data);
-    })
+    setTimeout(() => PubSub.publish('coinDataReady'), 3000);
   }
 
   getAPIAddress(exchangeName){
@@ -80,11 +84,11 @@ class Ticker {
     }
   }
 
-  update(exchange){
+   update(exchange){
     var addr = this.getAPIAddress(exchange);
     var retrieveField = this.retrieveField(exchange);
     axios.get(addr)
-    .then(response => {
+    .then((response) => {
       var data = this.purifyResponse(exchange, response);
       Object.keys(data).map(coin => {
         var COIN = coin.toUpperCase();
