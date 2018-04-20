@@ -28,9 +28,15 @@ class PushManager{
       return this.find({});
     }
 
-    const Push = mongoose.model('Push', pushSchema);
+    this.Push = mongoose.model('Push', pushSchema);
 
-    Push.findAll().then(result => console.log(result));
+    this.run();
+  }
+
+  async run(){
+    var pushes = await this.Push.findAll();
+    
+    console.log(pushes);
   }
 
 }
