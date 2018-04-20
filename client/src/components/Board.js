@@ -50,7 +50,6 @@ class Board extends React.Component {
           this.setState({order});
         }}
         renderRow={row => {
-          console.log(row);
           return <TouchableHighlight style={{flex: 1, width}} onPress={() => this.props.callback(row.exchange, row.name)}>
             <BoardRow name={row.name} data={row.data}/>
           </TouchableHighlight>

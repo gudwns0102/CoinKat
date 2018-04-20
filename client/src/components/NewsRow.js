@@ -1,24 +1,36 @@
 import React from 'react'
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, Image, Linking } from 'react-native';
 
-const NewsRow = ({news}) => {
+import { getHeaderImg } from '../lib/';
 
-  
-  
-  return(
-    <View style={styles.container}>
-      <Text>This is NewsRow</Text>
-    </View>
+const NewsRow = ({coin, news}) => {
+  if(news.description == null){
+    news.description = coin;
+  }
+
+  return (
+    <TouchableOpacity onPress={() => Linking.openURL(news.url).catch(err => console.log(err))} style={styles.newsRow}>
+      <Image 
+        source={news.urlToImage ? {uri: news.urlToImage} : getHeaderImg(coin)} 
+        style={{width: '30%', height:'90%', borderTopRightRadius: 10, borderBottomRightRadius: 10, marginRight: 10}}/>
+      <Text style={{flex: 1}}>
+        <Text style={{fontWeight: 'bold'}}>{news.title}{'\n'}</Text>
+        <Text>
+          {news.description.trim().replace(/\n/g, ' ').substring(0, 60)}
+          {news.description.length > 100 ? '...' : ''}
+        </Text>
+      </Text>
+    </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
-  container:{
+  newsRow: {
     width:'100%',
     flex: 1,
-    alignItems:'center',
-    justifyContent:'center',
-  }
+    flexDirection:'row',
+    alignItems:'center'
+  },
 })
 
 export default NewsRow;

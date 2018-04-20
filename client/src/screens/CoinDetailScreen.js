@@ -11,34 +11,12 @@ import toLocaleString from '../lib/toLocaleString';
 import * as Components from '../components';
 
 import axios from 'axios';
-
 import Ionicons from 'react-native-vector-icons/Ionicons';
-
 import PubSub from 'pubsub-js';
+import Parse from 'parse/react-native';
 
 const { width, height } = Dimensions.get('window');
 const googleAPIKey = '232338aa4c4d4bfca82d9fada0000db3';
-
-const NewsRow = ({coin, news}) => {
-  if(news.description == null){
-    news.description = coin;
-  }
-
-  return (
-    <TouchableOpacity onPress={() => Linking.openURL(news.url).catch(err => console.log(err))} style={styles.newsRow}>
-      <Image 
-        source={news.urlToImage ? {uri: news.urlToImage} : getHeaderImg(coin)} 
-        style={{width: '30%', height:'90%', borderTopRightRadius: 10, borderBottomRightRadius: 10, marginRight: 10}}/>
-      <Text style={{flex: 1}}>
-        <Text style={{fontWeight: 'bold'}}>{news.title}{'\n'}</Text>
-        <Text>
-          {news.description.trim().replace(/\n/g, ' ').substring(0, 60)}
-          {news.description.length > 100 ? '...' : ''}
-        </Text>
-      </Text>
-    </TouchableOpacity>
-  );
-}
 
 class CoinDetailScreen extends React.Component {
 
@@ -51,6 +29,36 @@ class CoinDetailScreen extends React.Component {
       upPercent: 5,
       downPercent: 5,
     }
+  }
+
+  handleRegister = async () => {
+    const { exchange, name } = this.props.navigation.state.params;
+    const data = this.props.coinData[exchange][name];
+    const upPrice = parseInt(data.currentPrice * (1 + this.state.upPercent/100));
+    const downPrice = parseInt(data.currentPrice * (1 - this.state.downPercent/100));
+
+    const user = await Parse.User.currentAsync();
+
+    const Push = Parse.Object.extend("Push");
+    const push = new Push();
+
+    push.set("exchange", exchange);
+    //push.exchange = exchange;
+    push.set('name', name);
+
+    push.set('upPrice', upPrice);
+    push.set('downPrice', downPrice);
+
+    push.set('parent', user);
+
+    push.save(null, {
+      success: result => {
+        alert('Your push is registered successfully!')
+      },
+      error: (obj, err) => {
+        alert('Network is not connected!')
+      }
+    })
   }
 
   componentDidMount(){
@@ -78,8 +86,8 @@ class CoinDetailScreen extends React.Component {
     if(newsReady){
       newsView = (
         <View style={{width:'100%', flex: 1, paddingBottom: '10%'}}>
-          <NewsRow news={news[0]} coin={name}/>
-          <NewsRow news={news[1]} coin={name}/>
+          <Components.NewsRow news={news[0]} coin={name}/>
+          <Components.NewsRow news={news[1]} coin={name}/>
         </View>
       );
     } else if(newsReady == undefined) {
@@ -126,7 +134,7 @@ class CoinDetailScreen extends React.Component {
               <Text style={{flex: 1, textAlign:'center'}}>rise up to {toLocaleString(parseInt(data.currentPrice * (1 + this.state.upPercent/100)))}{'\n'}</Text>
               <Text style={{flex: 1, textAlign:'center'}}>come down {toLocaleString(parseInt(data.currentPrice * (1 - this.state.downPercent/100)))}{'\n'}</Text>
             </Text>
-            <TouchableOpacity style={styles.registerBtn}>
+            <TouchableOpacity onPress={this.handleRegister} style={styles.registerBtn}>
               <Text>Register Push</Text>
             </TouchableOpacity>
           </View>
@@ -172,12 +180,6 @@ const styles = StyleSheet.create({
     height:'10%',
   },
 
-  newsRow: {
-    width:'100%',
-    flex: 1,
-    flexDirection:'row',
-    alignItems:'center'
-  },
 
   alarmTextBox: {
     height: '100%',

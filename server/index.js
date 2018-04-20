@@ -10,6 +10,9 @@ var api = new ParseServer({
   masterKey: 'AOWHDDKNKLLR$@303k',
 });
 
+var PushManager = require('./PushManager');
+var pushManager = new PushManager();
+/*
 var myKey = 'AAAAcmJLzBY:APA91bF2x1IhD0HipgY7MY3ovle_fkizJEXJvK8s2kEAP-JPBa31i2zViSAT3OOD3EN84r4MoHat_2llwXiI67y7VkR760oSoSyzcucptu6VRaLY_lJTTYAXQE3Rjp43H_5empiNyjWj'
 var token = 'f2Hz1j_afP0:APA91bHzgD9GReXajQdJuC8l87NbFmUxNIOXwxWpEwzwurHPYNj2fWoSDVj4bnNKxMrfcR5UQU048f7y9uC9eKExm1Z7OK6qeWxCGL8-DV7rXHjx1ZkNhpnHOgkJNQqgzP089LUqE4P9'
 
@@ -44,7 +47,7 @@ fcm.send(push_data, function(err, response) {
 
   console.log('Push메시지가 발송되었습니다.');
   console.log(response);
-});
+});*/
 
 // Serve the Parse API at /parse URL prefix
 app.use('/parse', api);
