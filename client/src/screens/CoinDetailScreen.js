@@ -15,6 +15,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import PubSub from 'pubsub-js';
 import Parse from 'parse/react-native';
 
+import FCM from 'react-native-fcm';
+
 const { width, height } = Dimensions.get('window');
 const googleAPIKey = '232338aa4c4d4bfca82d9fada0000db3';
 
@@ -38,6 +40,7 @@ class CoinDetailScreen extends React.Component {
     const downPrice = parseInt(data.currentPrice * (1 - this.state.downPercent/100));
 
     const user = await Parse.User.currentAsync();
+    const FCMToken = await FCM.getFCMToken();
 
     const Push = Parse.Object.extend("Push");
     const push = new Push();
@@ -50,6 +53,7 @@ class CoinDetailScreen extends React.Component {
     push.set('downPrice', downPrice);
 
     push.set('parent', user);
+    push.set('FCMToken', FCMToken);
 
     push.save(null, {
       success: result => {

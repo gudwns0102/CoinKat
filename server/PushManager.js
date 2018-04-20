@@ -65,8 +65,8 @@ class PushManager{
     var upPrice = push.get('upPrice');
     var downPrice = push.get('downPrice');
 
-    var FCMToken = parent.get('FCMToken');
-    console.log(parent);
+    var FCMToken = push.get('FCMToken');
+    console.log(FCMToken);
     
     var { currentPrice } = this.coinData[exchange][name];
 
