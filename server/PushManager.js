@@ -1,3 +1,4 @@
+
 var FCM = require('fcm-node');
 var Parse = require('parse/node');
 var FCM_KEY= 'AAAAcmJLzBY:APA91bF2x1IhD0HipgY7MY3ovle_fkizJEXJvK8s2kEAP-JPBa31i2zViSAT3OOD3EN84r4MoHat_2llwXiI67y7VkR760oSoSyzcucptu6VRaLY_lJTTYAXQE3Rjp43H_5empiNyjWj'
@@ -31,26 +32,42 @@ class PushManager{
 
   checkAllPush(){
     var pushes = this.pushes;
-    pushes.forEach((push, index, array) => this.checkPush(push));
+    pushes.forEach(async (push, index, array) => {await this.checkPush(push); console.log(`index ${index} done!`)});
+    console.log('All push done... exit');
   }
 
-  checkPush(push){
-    console.log('checkPush star!')
+  async checkPush(push){
     var parent = push.get('parent');
     var exchange = push.get('exchange');
     var name = push.get('name');
     var upPrice = push.get('upPrice');
     var downPrice = push.get('downPrice');
 
-    var currentPrice = this.coinData[exchange][name];
+    var { currentPrice } = this.coinData[exchange][name];
 
-    console.log(currentPrice)
+    if(currentPrice >= upPrice || currentPrice <= downPrice){
+      console.log('push Hit');
+      await this.handlePushHit(push);
+    } else {
+      console.log('push Miss');
+    }
+  }
+
+  async handlePushHit(push){
+    await push.destroy({
+      success: obj => {
+        console.log('push Deleted')
+      },
+      error: (obj, err) => {
+        console.log(err);
+      }
+    })
   }
 
   async run(){
     this.requestCoinData();
     await this.updateAllPush();
-    this.checkAllPush();    
+    this.checkAllPush();
   }
 }
 
