@@ -70,7 +70,7 @@ class PushManager{
     var { currentPrice } = this.coinData[exchange][name];
 
     var push_data = {
-      to: token,
+      to: FCMtoken,
       notification: {
         title: `${exchange} ${name} Push`,
         body: `${exchange} ${name}의 현재 가격이 ${currentPrice} 입니다.`,
