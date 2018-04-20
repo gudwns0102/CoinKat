@@ -1,4 +1,4 @@
-Parse.Cloud.define('test', (req, res) => {
+Parse.Cloud.job('test', (req, res) => {
   var Push = Parse.Object.extend("Push");
   var query = new Parse.Query(Push);
 
