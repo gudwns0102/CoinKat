@@ -100,7 +100,7 @@ class PushManager{
       console.log(response);
     })
 
-    /*
+    
     await push.destroy({
       success: obj => {
         console.log('push Deleted')
@@ -108,7 +108,7 @@ class PushManager{
       error: (obj, err) => {
         console.log(err);
       }
-    })*/
+    })
   }
 
   async run(){
