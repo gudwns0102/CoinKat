@@ -1,3 +1,15 @@
 Parse.Cloud.define('test', (req, res) => {
-  res.success('Hello World!');
+  var Push = Parse.Object.extend("Push");
+  var query = new Parse.Query(Push);
+
+  query.find({
+    success: results => {
+      console.log(results)
+      res.success({code: 100});
+    },
+    error: (err) => {
+      console.log(err)
+      res.error();
+    }
+  })
 })
