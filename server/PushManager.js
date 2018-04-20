@@ -17,7 +17,7 @@ class PushManager{
       name: {type: String, required: true},
       upPrice: {type: Number, required: true},
       downPrice: {type: Number, required: true},
-      _p_parent: {required: true}
+      _p_parent: {type: Object, required: true}
     },
     {
       timeStamp: true
