@@ -37,7 +37,7 @@ class PushManager{
       await this.checkPush(push);
       console.log(`index ${i} done!`);
     }
-    //await pushes.forEach(async (push, index, array) => {await this.checkPush(push); console.log(`index ${index} done!`)});
+
     console.log('All push done... exit');
   }
 
@@ -72,7 +72,8 @@ class PushManager{
   async run(){
     this.requestCoinData();
     await this.updateAllPush();
-    this.checkAllPush();
+    await this.checkAllPush();
+    console.log('checkAllPush done in run')
   }
 }
 
