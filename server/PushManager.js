@@ -73,7 +73,7 @@ class PushManager{
     this.requestCoinData();
     await this.updateAllPush();
     await this.checkAllPush();
-    setTimeout(this.run, 5000);
+    setTimeout(() => this.run(), 5000);
   }
 }
 
