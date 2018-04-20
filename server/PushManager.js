@@ -32,7 +32,12 @@ class PushManager{
 
   async checkAllPush(){
     var pushes = this.pushes;
-    await pushes.forEach(async (push, index, array) => {await this.checkPush(push); console.log(`index ${index} done!`)});
+    for(var i=0; i<pushes.length; i++){
+      var push = pushes[i];
+      await this.checkPush(push);
+      console.log(`index ${index} done!`);
+    }
+    //await pushes.forEach(async (push, index, array) => {await this.checkPush(push); console.log(`index ${index} done!`)});
     console.log('All push done... exit');
   }
 
