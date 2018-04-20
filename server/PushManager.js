@@ -10,7 +10,6 @@ class PushManager{
 
     PubSub.subscribe('responseCoinData', (msg, data) => {
       this.coinData = data;
-      console.log(data);
     })
 
     this.temp = PubSub.subscribe('coinDataReady', () => {
@@ -32,7 +31,6 @@ class PushManager{
 
   checkAllPush(){
     var pushes = this.pushes;
-    console.log(pushes);
     pushes.forEach((push, index, array) => this.checkPush(push));
   }
 
@@ -44,7 +42,7 @@ class PushManager{
     var upPrice = push.get('upPrice');
     var downPrice = push.get('downPrice');
 
-    var curretPrice = this.coinData[exchange][name];
+    var currentPrice = this.coinData[exchange][name];
 
     console.log(currentPrice)
   }
