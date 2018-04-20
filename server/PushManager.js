@@ -6,6 +6,8 @@ var FCM_KEY= 'AAAAcmJLzBY:APA91bF2x1IhD0HipgY7MY3ovle_fkizJEXJvK8s2kEAP-JPBa31i2
 class PushManager{
   constructor(){
     this.fcm = new FCM(FCM_KEY);
+
+    this.run();
   }
 
   async updateAllPush(){
