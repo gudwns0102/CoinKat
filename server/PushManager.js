@@ -6,16 +6,32 @@ var FCM_KEY= 'AAAAcmJLzBY:APA91bF2x1IhD0HipgY7MY3ovle_fkizJEXJvK8s2kEAP-JPBa31i2
 class PushManager{
   constructor(){
     this.fcm = new FCM(FCM_KEY);
-  
-    this.updatePush();
   }
 
-  async updatePush(){
+  async updateAllPush(){
     var Push = Parse.Object.extend("Push");
     var query = new Parse.Query(Push);
-    var pushes = await query.find();
+    this.pushes = await query.find();
+  }
 
-    console.log(pushes);
+  checkAllPush(){
+    var pushes = this.pushes;
+    pushes.forEach((push, index, array) => checkPush(push));
+  }
+
+  checkPush(push){
+    var parent = push.get('parent');
+    var exchange = push.get('exchange');
+    var name = push.get('name');
+    var upPrice = push.get('upPrice');
+    var downPrice = push.get('downPrice');
+    
+    console.log(parent);
+  }
+
+  run(){
+    this.updateAllPush();
+    this.checkAllPush();    
   }
 }
 
