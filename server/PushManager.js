@@ -1,9 +1,9 @@
-import { setTimeout } from 'timers';
 
 var FCM = require('fcm-node');
 var Parse = require('parse/node');
 var FCM_KEY= 'AAAAcmJLzBY:APA91bF2x1IhD0HipgY7MY3ovle_fkizJEXJvK8s2kEAP-JPBa31i2zViSAT3OOD3EN84r4MoHat_2llwXiI67y7VkR760oSoSyzcucptu6VRaLY_lJTTYAXQE3Rjp43H_5empiNyjWj'
 var PubSub = require('pubsub-js');
+var { setTimeout } = require('timers');
 
 class PushManager{
   constructor(){
