@@ -1,4 +1,5 @@
 var axios = require('axios');
+var PubSub = require('pubsub-js');
 
 class Ticker {
   constructor(){
@@ -11,6 +12,10 @@ class Ticker {
       console.log('Fetch API')
       this.updateAll();
     }, 3000);
+
+    PubSub.subscribe('requestCoinData', () => {
+      Pusbsub.publish('responseCoinData', this.data);
+    })
   }
 
   getAPIAddress(exchangeName){
