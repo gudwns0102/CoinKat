@@ -24,11 +24,22 @@ class PushManager{
       timeStamp: true
     });
 
+    const userSchema = new mongoose.Schema({
+      _id: {type: String, required: true, unique: true}
+    },{
+      collection: 'User'
+    })
+
     pushSchema.statics.findAll = function(){
       return this.find({});
     }
 
+    userSchema.statics.findById = function(_id){
+      return this.find({_id});
+    }
+
     this.Push = mongoose.model('Push', pushSchema);
+    this.User = mongoose.model('User', userSchema);
 
     this.run();
   }
@@ -36,7 +47,11 @@ class PushManager{
   async run(){
     var pushes = await this.Push.findAll();
     
-    console.log(pushes);
+    var userId = pushes.split('$')[1];
+
+    var user = await this.User.findById(userId);
+
+    console.log(user);
   }
 
 }
