@@ -7,6 +7,7 @@ class PushManager{
   constructor(){
     this.fcm = new FCM(FCM_KEY);
   
+    this.updatePush();
   }
 
   async updatePush(){
