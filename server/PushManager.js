@@ -30,9 +30,9 @@ class PushManager{
     this.pushes = await query.find();
   }
 
-  checkAllPush(){
+  async checkAllPush(){
     var pushes = this.pushes;
-    pushes.forEach(async (push, index, array) => {await this.checkPush(push); console.log(`index ${index} done!`)});
+    await pushes.forEach(async (push, index, array) => {await this.checkPush(push); console.log(`index ${index} done!`)});
     console.log('All push done... exit');
   }
 
