@@ -23,7 +23,9 @@ class PushManager{
       timeStamp: true
     });
 
-    pushSchema.statics.findAll = () => this.find({});
+    pushSchema.statics.findAll = function(){
+      return this.find({});
+    }
 
     const Push = mongoose.model('Push', pushSchema);
 
