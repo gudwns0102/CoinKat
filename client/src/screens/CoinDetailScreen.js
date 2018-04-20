@@ -26,8 +26,8 @@ class CoinDetailScreen extends React.Component {
     this.state = {
       newsReady: undefined,
       news: null,
-      upPercent: 5,
-      downPercent: 5,
+      upPercent: 0.1,
+      downPercent: 0.1,
     }
   }
 
@@ -123,8 +123,8 @@ class CoinDetailScreen extends React.Component {
           <Components.CKPicker 
             style={{marginLeft: 10, marginRight: 20, height: '100%', borderRadius: 10}}
             radius={60} 
-            initialValue={5} 
-            range={{upper: 15, lower: 5}} 
+            initialValue={0.1} 
+            range={{upper: 15, lower: 0}} 
             step={0.1} 
             callback={(upPercent, downPercent) => this.setState({upPercent, downPercent})}/>
           <View style={styles.alarmTextBox}>
