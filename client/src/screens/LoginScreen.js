@@ -24,6 +24,8 @@ import Parse from 'parse/react-native';
 
 import { withNavigation } from 'react-navigation';
 
+import FCM from 'react-native-fcm';
+
 class LoginScreen extends React.Component{
 
   constructor(props){
@@ -89,6 +91,10 @@ class LoginScreen extends React.Component{
 
     Parse.FacebookUtils.logIn(authData, {
       success: (user) => {
+        FCM.getFCMToken().then(token => {
+          user.set('FCMToken')
+          user.save();
+        })
         navigation.navigate('MainStack');
       },
       error : (user, error) => {

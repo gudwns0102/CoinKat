@@ -10,6 +10,7 @@ import { withNavigation, NavigationActions } from 'react-navigation';
 import PubSub from 'pubsub-js';
 
 const { width, height } = Dimensions.get('window');
+const CIRCLE_RADIUS = 25;
 
 class CKController extends React.Component {
 
@@ -47,6 +48,23 @@ class CKController extends React.Component {
   
       onPanResponderRelease: (e, { vx, vy }) => {
         // Flatten the offset to avoid erratic behavior
+        this.state.pan.flattenOffset();        
+        
+        var { pageX, pageY } = e.nativeEvent;
+        var margin = CIRCLE_RADIUS;
+
+        if(pageX > width-margin){
+          Animated.spring(this.state.pan.x, { toValue: margin, friction: 3}).start();        
+        } else if (pageX < margin){
+          Animated.spring(this.state.pan.x, { toValue: this.state.pan.x._value - pageX + margin , friction: 3}).start();                  
+        }
+
+        if(pageY > height-margin){
+          Animated.spring(this.state.pan.y, { toValue: margin, friction: 3}).start();        
+        } else if (pageY < margin){
+          Animated.spring(this.state.pan.y, { toValue: this.state.pan.y._value - pageY + margin, friction: 3}).start();                  
+        }
+
         this.state.pan.flattenOffset();
       }
     });
@@ -106,14 +124,6 @@ class CKController extends React.Component {
     } else {
       var route = nav.state.key;
       btn = eval(route + 'Btn');
-      /*
-      if(route == 'BoardScreen'){
-        btn = BoardScreenBtn;
-      } else if(route == 'CoinAddScreen'){
-        btn = CoinAddScreenBtn;
-      } else if(route == 'AvatarSelectScreen'){
-        btn = AvatarSelectScreenBtn;
-      }*/
     }
       
     return (
@@ -127,7 +137,6 @@ class CKController extends React.Component {
   }
 }
 
-let CIRCLE_RADIUS = 25;
 const styles = StyleSheet.create({
   circle: {
     position:'absolute',

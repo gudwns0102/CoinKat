@@ -37,9 +37,10 @@ class FetchScreen extends React.Component {
 
     var FCMToken = await FCM.getFCMToken()
     var user = await Parse.User.currentAsync();
-    user.set('FCMToken', FCMToken);
-    console.log(user.get('FCMToken'));
-    await user.save();
+    if(user){
+      user.set('FCMToken', FCMToken);
+      await user.save();
+    }
     
     var { data } = await axios.get('http://13.125.101.187:1337/all');
     var avatar = await AsyncStorage.getItem('avatar');
@@ -49,7 +50,7 @@ class FetchScreen extends React.Component {
     this.props.setCoin(data);
     this.props.setAvatar(avatar ? avatar : 'BTC');
     if(order == null || order == []){
-      AsyncStorage.setItem('order', JSON.stringify(['bithumb-BTC', 'bithumb-ETH']))
+      AsyncStorage.setItem('order', JSON.stringify([]))
       .then(result => this.props.navigation.navigate(this.state.nextStack))
     } else {
       this.props.navigation.navigate(this.state.nextStack)
@@ -59,6 +60,8 @@ class FetchScreen extends React.Component {
       var { data } = await axios.get('http://13.125.101.187:1337/all');
       this.props.setCoin(data);
     }, 3000)
+
+    this.props.navigation.navigate('BoardScreen');
 
   }
 

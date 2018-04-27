@@ -42,7 +42,7 @@ class CKPicker extends React.Component {
         var r = this.props.radius;
         this.temp = setInterval(() => {
           this.setState((prevState) => {
-            this.props.callback(this.state.value1, this.state.value2);
+            //this.props.callback(this.state.value1, this.state.value2);
             var value = this.getCurrentValue();
             var newValue = prevState[value] + step * (-prevState.dy/r);
             newValue > upper ? newValue = upper : newValue < lower ? newValue = lower : null;
@@ -59,7 +59,6 @@ class CKPicker extends React.Component {
   
       // When we drag/pan the object, set the delate to the states pan position
       onPanResponderMove: (e, gestureState) => {
-        
         this.setState({dx: gestureState.dx, dy: gestureState.dy});
         return Animated.event([
           null, {dx: this.state.pan.x, dy: this.state.pan.y},

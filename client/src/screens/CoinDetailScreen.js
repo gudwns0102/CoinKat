@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { StyleSheet, View, Text, Image, TouchableOpacity, Dimensions, ActivityIndicator,Linking } from 'react-native';
+import { StyleSheet, View, Text, Image, TouchableOpacity, Dimensions, ActivityIndicator,Linking, AsyncStorage } from 'react-native';
 
 import { withNavigation } from 'react-navigation';
 import { connect } from 'react-redux';
@@ -17,8 +17,10 @@ import Parse from 'parse/react-native';
 
 import FCM from 'react-native-fcm';
 
+import { classifyNews } from '../lib/';
+
 const { width, height } = Dimensions.get('window');
-const googleAPIKey = '232338aa4c4d4bfca82d9fada0000db3';
+const googleAPIKey = '754f0b15df4f4420994408e4a92cba55';
 
 class CoinDetailScreen extends React.Component {
 
@@ -27,9 +29,10 @@ class CoinDetailScreen extends React.Component {
 
     this.state = {
       newsReady: undefined,
+      pickerReady: false,
       news: null,
-      upPercent: 0.1,
-      downPercent: 0.1,
+      upPercent: 0,
+      downPercent: 0,
     }
   }
 
@@ -43,7 +46,7 @@ class CoinDetailScreen extends React.Component {
     const FCMToken = await FCM.getFCMToken();
 
     const Push = Parse.Object.extend("Push");
-    const push = new Push();
+    var push = new Push();
 
     push.set("exchange", exchange);
     //push.exchange = exchange;
@@ -63,21 +66,83 @@ class CoinDetailScreen extends React.Component {
         alert('Network is not connected!')
       }
     })
+
+    var pushData = await AsyncStorage.getItem(`push${exchange}${name}`)
+    pushData = JSON.parse(pushData);
+
+    pushData == null ? pushData = [] : null;
+
+    pushData.push({
+      upPercent: this.state.upPercent,
+      downPercent: this.state.downPercent
+    });
+
+    if(pushData.length > 5){
+      pushData.splice(0, pushData.length-5);
+    }
+
+    AsyncStorage.setItem(`push${exchange}${name}`, JSON.stringify(pushData));
+
+    console.log(pushData);
+    this.props.navigation.navigate('BoardScreen');
   }
 
-  componentDidMount(){
+  async componentDidMount(){
     this.token = PubSub.subscribe('CKControllerPress', () => {
       this.props.navigation.navigate('BoardScreen');
     })
-    const { name } = this.props.navigation.state.params;
+    const { exchange, name } = this.props.navigation.state.params;
     this.props.setNav(this.props.navigation);
-    axios.get(`https://newsapi.org/v2/everything?q=${translate2Origin(name)}&apiKey=${googleAPIKey}`)
+    axios.get(`https://newsapi.org/v2/everything?q=${translate2Origin(name)}&apiKey=${googleAPIKey}&pageSize=50`)
     .then(result => {
-      this.setState({newsReady: true, news: result.data.articles})
+      var filteredNews = [];
+      var articles = result.data.articles;
+      for(i in articles){
+        var article = articles[i];
+        var res = classifyNews(articles[i])
+        if(res){
+          filteredNews.push(article)
+        }
+      }
+
+      this.setState({newsReady: true, news: filteredNews})
     })
     .catch(err => {
+      console.log(err);
       this.setState({newsReady: false, news: null})
     })
+
+    var pushData = await AsyncStorage.getItem(`push${exchange}${name}`);
+    pushData = JSON.parse(pushData);
+
+    pushData == null ? pushData = [] : null;
+    
+    var upPercentMean = 0;
+    var downPercentMean = 0;
+
+    var len = pushData.length;
+
+    console.log('pushData:', pushData)
+
+    if(len != 0){
+      for(i in pushData){
+        var push = pushData[i];
+        upPercentMean += push.upPercent;
+        downPercentMean += push.downPercent;
+      }
+
+      upPercentMean /= len;
+      downPercentMean /= len;
+    } else {
+      upPercentMean = 5;
+      downPercentMean = 5;
+    }
+
+    this.setState({
+      upPercent: parseInt(upPercentMean.toFixed(1)), 
+      downPercent: parseInt(downPercentMean.toFixed(1)),
+      pickerReady: true
+    });
   }
 
   render(){
@@ -88,10 +153,23 @@ class CoinDetailScreen extends React.Component {
     let newsView;
 
     if(newsReady){
+      var temp = this.state.news.map((news, key) => {
+        return <Components.NewsRow key={key} news={news} coin={name}/>
+      })
+
+      temp = temp.slice(0, 2);
+
+      if(temp.length == 0){
+        temp = (
+          <View style={{width:'100%', flex: 1, alignItems:'center', justifyContent:'center'}}>
+            <Text>There is no proper News.</Text>
+          </View>
+        )
+      }
+
       newsView = (
         <View style={{width:'100%', flex: 1, paddingBottom: '10%'}}>
-          <Components.NewsRow news={news[0]} coin={name}/>
-          <Components.NewsRow news={news[1]} coin={name}/>
+          {temp}
         </View>
       );
     } else if(newsReady == undefined) {
@@ -106,6 +184,21 @@ class CoinDetailScreen extends React.Component {
           <Text>Network is not connected...</Text>
         </View>
       )
+    }
+
+    let picker;
+
+    if(this.state.pickerReady){
+      picker = 
+        <Components.CKPicker 
+          style={{marginLeft: 10, marginRight: 20, height: '100%', borderRadius: 10}}
+          radius={60} 
+          initialValue={this.state.upPercent} 
+          range={{upper: 15, lower: 0}} 
+          step={0.1} 
+          callback={(upPercent, downPercent) => this.setState({upPercent, downPercent})}/>
+    } else {
+      picker = <ActivityIndicator />
     }
 
     return(
@@ -124,13 +217,7 @@ class CoinDetailScreen extends React.Component {
           {newsView}
         </View>
         <View style={{width: '95%', flex: 1, backgroundColor:'white', marginTop: 10, marginBottom: 10, paddingTop: 10, paddingBottom: 10, borderRadius: 10, flexDirection:'row', alignItems:'center'}}>
-          <Components.CKPicker 
-            style={{marginLeft: 10, marginRight: 20, height: '100%', borderRadius: 10}}
-            radius={60} 
-            initialValue={0.1} 
-            range={{upper: 15, lower: 0}} 
-            step={0.1} 
-            callback={(upPercent, downPercent) => this.setState({upPercent, downPercent})}/>
+          {picker}
           <View style={styles.alarmTextBox}>
             <Text style={{fontFamily:'Comfortaa-Regular', lineHeight: 30}}>
               <Text>We'll send you push{'\n'}</Text>

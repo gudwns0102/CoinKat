@@ -4,6 +4,10 @@ import { StyleSheet, View, Text, TouchableOpacity, Image, Linking } from 'react-
 import { getHeaderImg } from '../lib/';
 
 const NewsRow = ({coin, news}) => {
+  if(!news){
+    return <Text>No news</Text>;
+  }
+
   if(news.description == null){
     news.description = coin;
   }
