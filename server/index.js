@@ -1,5 +1,12 @@
 var app = require('express')();
-var server = require('http').Server(app);
+var http = require('http');
+var https = require('https');
+var fs = require('fs');
+
+var options = {
+  key: fs.readFileSync('key.pem'),
+  cert: fs.readFileSync('cert.pem'),
+}
 
 var ParseServer = require('parse-server').ParseServer;
 var api = new ParseServer({
@@ -33,4 +40,5 @@ app.get('/all', (req, res) => {
 var Ticker = require('./Ticker');
 var ticker = new Ticker();
 
-app.listen(1337, () => console.log('start 3000')); 
+http.createServer(app).listen(1337, () => console.log('start 1337 HTTP')); 
+https.createServer(options, app).listen(3000, () => console.log('start 3000 HTTPS'));
