@@ -48,10 +48,6 @@ app.all('/*', function(req, res, next) {
   next();
 });
 
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'build', 'index.html'));
-})
-
 app.get('/all', (req, res) => {
   console.log(tickerManager.data);
   res.send(tickerManager.data);
@@ -67,6 +63,10 @@ app.get('/reverseAll', (req, res) => {
   })
 
   res.send(result);
+})
+
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
 })
 
 app.listen(1337, () => console.log('Parse is on 1337'))
