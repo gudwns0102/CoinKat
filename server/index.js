@@ -40,7 +40,7 @@ var tickerManager = new TickerManager();
 
 app.use('/parse', api);
 app.use(cors());
-app.use(express.static(path.join(__dirname, 'build')))
+app.use(express.static(path.join(__dirname, 'build'), {etag: false}))
 
 app.all('/*', function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
