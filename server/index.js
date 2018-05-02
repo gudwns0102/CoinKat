@@ -62,5 +62,5 @@ app.get('/reverseAll', (req, res) => {
   res.send(result);
 })
 
-http.createServer(app).listen(80, () => console.log('start 1337 HTTP')); 
+http.createServer(lex.middleware(redirectHttps())).listen(1337);
 https.createServer(lex.httpsOptions, lex.middleware(app)).listen(443, () => console.log('start 3000 HTTPS'));
