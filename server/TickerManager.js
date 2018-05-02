@@ -1,7 +1,7 @@
 var axios = require('axios');
 var PubSub = require('pubsub-js');
 var { setTimeout } = require('timers');
-class Ticker {
+class TickerManager {
   constructor(){
     this.data = {
       bithumb: {},
@@ -15,7 +15,6 @@ class Ticker {
     this.updateAll()
 
     setInterval(() => {
-      console.log('Fetch API')
       this.updateAll();
     }, 3000);
 
@@ -104,4 +103,4 @@ class Ticker {
   }
 }
 
-module.exports = Ticker;
+module.exports = TickerManager;
