@@ -1,7 +1,8 @@
 var http = require('http');
 var https = require('https');
-var redirectHttps = require('redirect-https');var app = require('express')();
-var fs = require('fs');
+var redirectHttps = require('redirect-https');
+var express = require('express');
+var app = express();
 var cors = require('cors')
 
 var ParseServer = require('parse-server').ParseServer;
@@ -38,12 +39,17 @@ var tickerManager = new TickerManager();
 
 app.use('/parse', api);
 app.use(cors());
+app.use(express.static(path.join(__dirname, 'build')))
 
 app.all('/*', function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "X-Requested-With");
   next();
 });
+
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+})
 
 app.get('/all', (req, res) => {
   console.log(tickerManager.data);
