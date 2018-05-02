@@ -62,5 +62,6 @@ app.get('/reverseAll', (req, res) => {
   res.send(result);
 })
 
-http.createServer(lex.middleware(redirectHttps())).listen(1337);
+app.listen(1337, () => console.log('Parse is on 1337'))
+http.createServer(lex.middleware(redirectHttps())).listen(80);
 https.createServer(lex.httpsOptions, lex.middleware(app)).listen(443, () => console.log('start 3000 HTTPS'));
