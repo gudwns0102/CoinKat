@@ -3,7 +3,8 @@ var https = require('https');
 var redirectHttps = require('redirect-https');
 var express = require('express');
 var app = express();
-var cors = require('cors')
+var cors = require('cors');
+var path = require('path')
 
 var ParseServer = require('parse-server').ParseServer;
 var api = new ParseServer({
