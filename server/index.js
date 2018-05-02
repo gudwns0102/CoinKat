@@ -1,13 +1,8 @@
-var app = require('express')();
 var http = require('http');
 var https = require('https');
+var redirectHttps = require('redirect-https');var app = require('express')();
 var fs = require('fs');
 var cors = require('cors')
-
-var options = {
-  key: fs.readFileSync('key.pem'),
-  cert: fs.readFileSync('cert.pem'),
-}
 
 var ParseServer = require('parse-server').ParseServer;
 var api = new ParseServer({
@@ -18,20 +13,37 @@ var api = new ParseServer({
   masterKey: 'AOWHDDKNKLLR$@303k',
 });
 
-var Parse = require('parse/node');
+const lex = require('greenlock-express').create({
+  version: 'v02', // draft-11 버전 인증서 사
+  configDir: '/etc/letsencrypt', // 또는 ~/letsencrypt/etc
+  server: 'production',
+  approveDomains: (opts, certs, cb) => {
+    if (certs) {
+      opts.domains = ['coinkat.tk'];
+    } else {
+      opts.email = 'sejong3408@gmail.com';
+      opts.agreeTos = true;
+    }
+    cb(null, { options: opts, certs });
+  },
+  renewWithin: 81 * 24 * 60 * 60 * 1000,
+  renewBy: 80 * 24 * 60 * 60 * 1000,
+});
 
 var PushManager = require('./PushManager');
 var pushManager = new PushManager();
 
+var TickerManager = require('./TickerManager');
+var tickerManager = new TickerManager();
+
+app.use('/parse', api);
+app.use(cors());
 
 app.all('/*', function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "X-Requested-With");
   next();
 });
-
-app.use('/parse', api);
-app.use(cors());
 
 app.get('/all', (req, res) => {
   console.log(tickerManager.data);
@@ -50,8 +62,5 @@ app.get('/reverseAll', (req, res) => {
   res.send(result);
 })
 
-var TickerManager = require('./TickerManager');
-var tickerManager = new TickerManager();
-
-http.createServer(app).listen(1337, () => console.log('start 1337 HTTP')); 
-https.createServer(options, app).listen(3000, () => console.log('start 3000 HTTPS'));
+http.createServer(app).listen(80, () => console.log('start 1337 HTTP')); 
+https.createServer(lex.httpsOptions, lex.middleware(app)).listen(443, () => console.log('start 3000 HTTPS'));

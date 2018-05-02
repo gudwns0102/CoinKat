@@ -13,9 +13,11 @@
     "cors": "^2.8.4",
     "express": "^4.16.3",
     "fcm-node": "^1.2.1",
+    "greenlock-express": "^2.1.1",
     "mongoose": "^5.0.15",
     "parse": "^1.11.1",
     "parse-server": "^2.7.4",
-    "pubsub-js": "^1.6.0"
+    "pubsub-js": "^1.6.0",
+    "redirect-https": "^1.1.5"
   }
 }
