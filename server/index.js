@@ -49,7 +49,6 @@ app.all('/*', function(req, res, next) {
 });
 
 app.get('/all', (req, res) => {
-  console.log(tickerManager.data);
   res.send(tickerManager.data);
 })
 

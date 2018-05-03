@@ -6,6 +6,7 @@ class TickerManager {
     this.data = {
       bithumb: {},
       coinone: {},
+      upbit: {},
     }
 
     PubSub.subscribe('requestCoinData', () => {
@@ -28,6 +29,9 @@ class TickerManager {
         
         case "coinone":
             return "https://api.coinone.co.kr/ticker/?currency=all"
+        
+        case "upbit": 
+            return "https://crix-api.upbit.com/v1/crix/trends/change_rate"
     }
   }
 
@@ -45,6 +49,24 @@ class TickerManager {
         delete data.result;
         delete data.timestamp;
         return data;
+      }
+
+      case "upbit":{
+        var purifiedData = {};
+        
+        response.data.filter(item => {
+          return item.code.search('KRW') != -1
+        }).map(item => {
+          var name = item.code.split('-')[1];
+          var result = {};
+          purifiedData[name] = {
+            currentPrice: item.tradePrice,
+            openPrice: item.openingPrice
+          }
+        })
+
+        console.log(purifiedData);
+        return purifiedData;
       }
     }
   }
@@ -80,6 +102,11 @@ class TickerManager {
 
           return result;
         };
+      
+      case "upbit":
+        return function(coinData){
+          return coinData;
+        }
     }
   }
 
