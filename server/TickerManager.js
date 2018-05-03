@@ -65,7 +65,6 @@ class TickerManager {
           }
         })
 
-        console.log(purifiedData);
         return purifiedData;
       }
     }
