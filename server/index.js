@@ -17,7 +17,7 @@ var api = new ParseServer({
 
 const lex = require('greenlock-express').create({
   version: 'v02', // draft-11 버전 인증서 사
-  configDir: __dirname, // 또는 ~/letsencrypt/etc
+  configDir: '/etc/letsencrypt', // 또는 ~/letsencrypt/etc
   server: 'production',
   approveDomains: (opts, certs, cb) => {
     if (certs) {
