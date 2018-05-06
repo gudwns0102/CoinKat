@@ -65,11 +65,12 @@ class PushManager{
     var upPrice = push.get('upPrice');
     var downPrice = push.get('downPrice');
 
-    var FCMToken = push.get('FCMToken');
-    console.log(FCMToken);
+    //var FCMToken = push.get('FCMToken');
+    //console.log(FCMToken);
     
     var { currentPrice } = this.coinData[exchange][name];
 
+    /*
     var push_data = {
       to: FCMToken,
       notification: {
@@ -89,6 +90,7 @@ class PushManager{
       }
     }
 
+    
     this.fcm.send(push_data, (err, response) => {
       if (err) {
         console.error('Push메시지 발송에 실패했습니다.');
@@ -98,17 +100,8 @@ class PushManager{
     
       console.log('Push메시지가 발송되었습니다.');
       console.log(response);
-    })
+    })*/
 
-    
-    await push.destroy({
-      success: obj => {
-        console.log('push Deleted')
-      },
-      error: (obj, err) => {
-        console.log(err);
-      }
-    })
 
     var message = {
       app_id: "ae409015-636e-43be-ba61-77aa589cec89",
@@ -144,6 +137,15 @@ class PushManager{
     
     req.write(JSON.stringify(data));
     req.end();
+
+    await push.destroy({
+      success: obj => {
+        console.log('push Deleted')
+      },
+      error: (obj, err) => {
+        console.log(err);
+      }
+    })
   }
 
   async run(){
