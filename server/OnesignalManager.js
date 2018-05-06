@@ -41,3 +41,5 @@ class OnesignalManager {
     req.end();
   };
 }
+
+module.exports = OnesignalManager;
