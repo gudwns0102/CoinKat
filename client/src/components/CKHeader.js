@@ -28,6 +28,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems:'center',
     backgroundColor:'white',
+//    shadow: '0 0 4px rgba(0,0,0,.14), 0 4px 8px rgba(0,0,0,.28)', 
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 1,
+    zIndex: 100
+    //shadowColor, shadowOffset, shadowOpacity, shadowRadius
   },
 
   menuView: {

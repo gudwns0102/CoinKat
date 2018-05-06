@@ -80,6 +80,14 @@ class LoginScreen extends React.Component{
     ).start();
   }
 
+  handleLogin = () => {
+    const { navigation } = this.props;
+    Parse.User.logIn(this.state.username, this.state.password, {
+      success: user => navigation.navigate('MainStack'),
+      error: err => alert(err),
+    })
+  }
+
   handleFacebookLogin = (data) => {
     const { navigation } = this.props;
     const { userID, accessToken, expirationTime } = data;
@@ -187,7 +195,7 @@ class LoginScreen extends React.Component{
       }
 
       const loginButton = (
-        <TouchableOpacity style={[buttonStyle, {backgroundColor: 'rgba(47, 145, 99, 0.925)', marginRight: 20}]}>
+        <TouchableOpacity style={[buttonStyle, {backgroundColor: 'rgba(47, 145, 99, 0.925)', marginRight: 20}]} onPress={this.handleLogin}>
           <Icon style={{fontSize: 18, color:'white'}} name="sign-in"/><Text style={{fontFamily: 'Comfortaa_Regular', color: 'white'}}>  Login</Text>
         </TouchableOpacity>
       )

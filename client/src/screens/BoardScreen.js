@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, View, Text, Alert, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, Alert, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { withNavigation } from 'react-navigation';
 
 import * as Components from '../components/';
@@ -7,35 +7,57 @@ import * as Components from '../components/';
 import { connect } from 'react-redux';
 import * as actions from '../actions';
 
+import Parse from 'parse/react-native';
+
 class BoardScreen extends React.Component {
 
   constructor(props){
     super(props);
 
+    this.state = {
+      board: null,
+    }
   }
 
-  componentDidMount(){
+  async componentDidMount(){
     this.props.setNav(this.props.navigation);
+    const user = await Parse.User.currentAsync();
+    const query = new Parse.Query(Parse.Object.extend("Board"));
+    query.equalTo("parent", user);
+    query.first({
+      success: board => this.setState({board}),
+      error: (board, err) => {
+        alert("Board Fetch Failed... Network Error");
+        this.setState({board: null});
+      },
+    })
   }
 
   render(){
+    var { board } = this.state;
+
+    if(!board){
+      return <View style={{height:'100%', alignItems:'center', justifyContent:'center'}}><ActivityIndicator /></View>
+    }
+
+    var boardData = board.get("data");
     var data = this.props.coinData;
     var items = {};
 
-    Object.keys(data).map(exchange => {
-      Object.keys(data[exchange]).map(name => {
-        var key = exchange + '-' + name;
-        items[key] = {
-          exchange,
-          name,
-          data: data[exchange][name],
-        };
-      })
-    })
+    for(var i in boardData){
+      const { exchange, name } = boardData[i];
+      var key = exchange + '-' + name;
+      items[key] = {
+        exchange,
+        name,
+        data: data[exchange][name],
+      }
+    }
 
     return(
       <View style={styles.container}>
-        <Components.Board 
+        <Components.Board
+          board={board}
           data={items} 
           callback={(exchange, name) => this.props.navigation.navigate('CoinDetailScreen', {exchange, name})}/>
       </View>

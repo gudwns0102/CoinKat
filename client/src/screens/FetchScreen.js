@@ -25,44 +25,49 @@ class FetchScreen extends React.Component {
     Parse.setAsyncStorage(AsyncStorage);
 
     Parse.initialize('QWDUKSHKDWOP@coinkat$HOFNDSESL#L');
-    Parse.serverURL = 'http://13.125.101.187:1337/parse';
+    Parse.serverURL = 'https://api.coinkat.tk/parse';
 
     Parse.User.enableUnsafeCurrentUser();
 
     Parse.User.currentAsync()
-    .then(user => this.setState({nextStack: user ? 'MainStack' : 'AuthStack' }))
+    .then(user => {
+      console.log('...');
+      this.setState({nextStack: user ? 'MainStack' : 'AuthStack' })
+    })
     .catch(err => {
+      console.log("???")
       console.log(error);
     })
 
     var FCMToken = await FCM.getFCMToken()
     var user = await Parse.User.currentAsync();
+    console.log(user)
     if(user){
       user.set('FCMToken', FCMToken);
       await user.save();
     }
     
-    var { data } = await axios.get('http://13.125.101.187:1337/all');
-    var avatar = await AsyncStorage.getItem('avatar');
-    var order = await AsyncStorage.getItem('order');
-
-    this.setState({nextStack: user ? 'MainStack' : 'AuthStack' })
+    var { data } = await axios.get('https://api.coinkat.tk/all');
     this.props.setCoin(data);
+
+    setInterval(async () => {
+      var { data } = await axios.get('https://api.coinkat.tk/all');
+      this.props.setCoin(data);
+    }, 3000)
+
+    var avatar = await AsyncStorage.getItem('avatar');
     this.props.setAvatar(avatar ? avatar : 'BTC');
+
+    this.props.navigation.navigate(this.state.nextStack)
+
+    /*
+    var order = await AsyncStorage.getItem('order');
     if(order == null || order == []){
       AsyncStorage.setItem('order', JSON.stringify([]))
       .then(result => this.props.navigation.navigate(this.state.nextStack))
     } else {
       this.props.navigation.navigate(this.state.nextStack)
-    }
-
-    setInterval(async () => {
-      var { data } = await axios.get('http://13.125.101.187:1337/all');
-      this.props.setCoin(data);
-    }, 3000)
-
-    this.props.navigation.navigate('BoardScreen');
-
+    }*/
   }
 
   render(){
