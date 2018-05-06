@@ -64,7 +64,7 @@ class PushManager{
     var name = push.get('name');
     var upPrice = push.get('upPrice');
     var downPrice = push.get('downPrice');
-
+    var pushID = push.get("pushID");
     //var FCMToken = push.get('FCMToken');
     //console.log(FCMToken);
     
@@ -106,7 +106,7 @@ class PushManager{
     var data = {
       app_id: "ae409015-636e-43be-ba61-77aa589cec89",
       contents: {"en": "English Message"},
-      included_segments: [parent.get("pushID")],
+      include_player_ids: [pushID],
     }
 
     var headers = {
