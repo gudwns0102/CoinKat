@@ -38,9 +38,6 @@ var pushManager = new PushManager();
 var TickerManager = require('./TickerManager');
 var tickerManager = new TickerManager();
 
-var OnesignalManager = require('./OnesignalManager');
-var onesignalManager = new OnesignalManager();
-
 app.use('/parse', api);
 app.use(cors());
 app.use(express.static(path.join(__dirname, 'build'), {etag: false}))
