@@ -21,7 +21,7 @@ const lex = require('greenlock-express').create({
   server: 'production',
   approveDomains: (opts, certs, cb) => {
     if (certs) {
-      opts.domains = ['api.coinkat.tk'];
+      opts.domains = ['www.coinkat.tk'];
     } else {
       opts.email = 'sejong3408@gmail.com';
       opts.agreeTos = true;
@@ -62,6 +62,10 @@ app.get('/reverseAll', (req, res) => {
   })
 
   res.send(result);
+})
+
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
 })
 
 app.listen(1337, () => console.log('Parse is on 1337'))
