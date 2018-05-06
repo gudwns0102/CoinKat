@@ -103,7 +103,7 @@ class PushManager{
     })*/
 
 
-    var message = {
+    var data = {
       app_id: "ae409015-636e-43be-ba61-77aa589cec89",
       contents: {"en": "English Message"},
       included_segments: [parent.get("pushID")],
