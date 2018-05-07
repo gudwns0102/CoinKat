@@ -10,21 +10,19 @@ import {
   TouchableOpacity, 
   Image, 
   ImageBackground, 
-  KeyboardAvoidingView 
+  KeyboardAvoidingView,
+  Button
 } from 'react-native';
+
+import FBSDK, { LoginButton, AccessToken, LoginManager, GraphRequest, GraphRequestManager } from 'react-native-fbsdk';
+import Parse from 'parse/react-native';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Sae } from 'react-native-textinput-effects';
 
 import * as actions from '../actions';
 import { connect } from 'react-redux';
-
-import FBSDK, { LoginButton, AccessToken, LoginManager, GraphRequest, GraphRequestManager } from 'react-native-fbsdk';
-import Parse from 'parse/react-native';
-
 import { withNavigation } from 'react-navigation';
-
-import FCM from 'react-native-fcm';
 
 class LoginScreen extends React.Component{
 
@@ -99,10 +97,6 @@ class LoginScreen extends React.Component{
 
     Parse.FacebookUtils.logIn(authData, {
       success: (user) => {
-        FCM.getFCMToken().then(token => {
-          user.set('FCMToken')
-          user.save();
-        })
         navigation.navigate('MainStack');
       },
       error : (user, error) => {
@@ -144,7 +138,7 @@ class LoginScreen extends React.Component{
         <Sae
           style={{width: '80%', height: 30}}
           label={'User ID'}
-          labelStyle={{color: 'white'}}
+          labelStyle={{color: 'white', fontWeight: 'normal', fontFamily: 'Raleway-Thin'}}
           iconClass={Icon}
           iconName={'pencil'}
           iconColor={'white'}
@@ -159,7 +153,7 @@ class LoginScreen extends React.Component{
         <Sae
           style={{width: '80%', height: 30}}
           label={'Password'}
-          labelStyle={{color: 'white'}}
+          labelStyle={{color: 'white', fontWeight: 'normal', fontFamily: 'Raleway-Thin'}}
           iconClass={Icon}
           iconName={'pencil'}
           iconColor={'white'}
@@ -194,6 +188,7 @@ class LoginScreen extends React.Component{
         borderRadius: 5,
       }
 
+      
       const loginButton = (
         <TouchableOpacity style={[buttonStyle, {backgroundColor: 'rgba(47, 145, 99, 0.925)', marginRight: 20}]} onPress={this.handleLogin}>
           <Icon style={{fontSize: 18, color:'white'}} name="sign-in"/><Text style={{fontFamily: 'Comfortaa_Regular', color: 'white'}}>  Login</Text>
@@ -224,30 +219,57 @@ class LoginScreen extends React.Component{
         }
         onLogoutFinished={this.handleFacebookLogout}/>
 
-      return(          
+      return (
         <ImageBackground
-          source={require('../../assets/images/login.png')}
-          imageStyle={{resizeMode: 'stretch'}}
+          source={require('../../assets/images/auth.jpg')}
+          imageStyle={{resizeMode: 'cover'}}
+          blurRadius={1}
           style={styles.fullScreen}>
-
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <Animated.View style={pageLoadStyle}>
-              <Animated.View style={headerStyle}>
-                <Image style={{width: 60, height: 60}} resizeMode='contain' source={require('../../assets/images/logo.png')} />
-                <Text style={{fontFamily: 'Comfortaa_Regular', fontSize: 40, color: 'white'}}>CoinKat</Text>
-              </Animated.View>  
-              <Animated.View style={{flex: 1, alignItems:'center'}}>
+            <View style={{width:'90%', height:'90%', backgroundColor:'#393750', alignItems:'center'}}>
+              <Animated.Image 
+                style={{width: 100, height: 100, marginTop: '10%', opacity: this.state.pageLoadOpacity,}} 
+                resizeMode='contain' 
+                source={require('../../assets/images/logo-white.png')} />
+              <View style={{flex: 1, width:'100%', alignItems:'center', justifyContent:'flex-end', marginBottom: '20%'}}>
                 {usernameTextInput}
                 {passwordTextInput}
-                <View style={{marginTop: 20, marginBottom: 20, width:'80%', height: 30, flexDirection:'row'}}>
+                <View style={{marginTop: 20, marginBottom: 10, width:'80%', height: 30, flexDirection:'row'}}>
                   {loginButton}
                   {RegisterButton}
                 </View>
                 {facebookButton}
-              </Animated.View>
-            </Animated.View>
+              </View>
+            </View>
           </TouchableWithoutFeedback>
-            
+        </ImageBackground>
+      )
+
+      return(          
+        <ImageBackground
+          source={require('../../assets/images/auth.jpg')}
+          imageStyle={{resizeMode: 'cover'}}
+          blurRadius={1}
+          style={styles.fullScreen}>
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss} >
+            <View style={{width:'90%', height:'90%', backgroundColor:'rgba(255,255,255,0.5)'}}>
+              <Animated.View style={pageLoadStyle}>
+                <Animated.View style={headerStyle}>
+                  <Image style={{width: 60, height: 60}} resizeMode='contain' source={require('../../assets/images/logo.png')} />
+                  <Text style={{fontFamily: 'Comfortaa_Regular', fontSize: 40, color: 'white'}}>CoinKat</Text>
+                </Animated.View>  
+                <View style={{flex: 1, alignItems:'center'}}>
+                  {usernameTextInput}
+                  {passwordTextInput}
+                  <View style={{marginTop: 20, marginBottom: 20, width:'80%', flexDirection:'row'}}>
+                    {loginButton}
+                    {RegisterButton}
+                  </View>
+                  {facebookButton}
+                </View>
+              </Animated.View>
+            </View>
+          </TouchableWithoutFeedback>
         </ImageBackground>
       )
     }
@@ -256,7 +278,9 @@ class LoginScreen extends React.Component{
 const styles = StyleSheet.create({
   fullScreen: {
     flex: 1,
-    width: '100%'
+    width: '100%',
+    alignItems:'center',
+    justifyContent:'center'
   }
 })
 

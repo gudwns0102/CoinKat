@@ -1,52 +1,47 @@
 import React from 'react'
-import { StyleSheet, View, Text, Image, AsyncStorage } from 'react-native';
+import { StyleSheet, View, Image, AsyncStorage } from 'react-native';
 import Parse from 'parse/react-native';
+import axios from 'axios';
 
 import { withNavigation } from 'react-navigation';
 import { connect } from 'react-redux';
-
 import * as actions from '../actions';
 
-import axios from 'axios';
-
-import FCM, { FCMEvent, RemoteNotificationResult } from 'react-native-fcm';
+import OneSignal from 'react-native-onesignal';
 
 class FetchScreen extends React.Component {
+  
+  onIds = async (device) => {
+    const { pushToken, userId } = device;
 
-  constructor(props){
-    super(props);
-
-    this.state = {
-      nextStack: null,
+    var user = await Parse.User.currentAsync();
+    if(user){
+      const OneSignal = Parse.Object.extend("OneSignal");
+      const query = new Parse.Query(OneSignal);
+      query.equalTo("parent", user);
+      query.first({
+        success: onesignal => {
+          if(!onesignal){
+            onesignal = new OneSignal();
+            onesignal.set("parent", user);
+          }
+          onesignal.set("mobile_id", userId);
+          onesignal.save(null)
+          .then(() => this.props.navigation.navigate('MainStack'));
+        },
+        error: (onesignal, err) => console.log(err)
+      })
+    } else {
+      this.props.navigation.navigate('AuthStack');
     }
   }
 
   async componentDidMount(){
     Parse.setAsyncStorage(AsyncStorage);
-
     Parse.initialize('QWDUKSHKDWOP@coinkat$HOFNDSESL#L');
     Parse.serverURL = 'https://api.coinkat.tk/parse';
-
     Parse.User.enableUnsafeCurrentUser();
 
-    Parse.User.currentAsync()
-    .then(user => {
-      console.log('...');
-      this.setState({nextStack: user ? 'MainStack' : 'AuthStack' })
-    })
-    .catch(err => {
-      console.log("???")
-      console.log(error);
-    })
-
-    var FCMToken = await FCM.getFCMToken()
-    var user = await Parse.User.currentAsync();
-    console.log(user)
-    if(user){
-      user.set('FCMToken', FCMToken);
-      await user.save();
-    }
-    
     var { data } = await axios.get('https://api.coinkat.tk/all');
     this.props.setCoin(data);
 
@@ -58,16 +53,11 @@ class FetchScreen extends React.Component {
     var avatar = await AsyncStorage.getItem('avatar');
     this.props.setAvatar(avatar ? avatar : 'BTC');
 
-    this.props.navigation.navigate(this.state.nextStack)
+    OneSignal.addEventListener('ids', this.onIds);
+  }
 
-    /*
-    var order = await AsyncStorage.getItem('order');
-    if(order == null || order == []){
-      AsyncStorage.setItem('order', JSON.stringify([]))
-      .then(result => this.props.navigation.navigate(this.state.nextStack))
-    } else {
-      this.props.navigation.navigate(this.state.nextStack)
-    }*/
+  componentWillUnmount(){
+    OneSignal.removeEventListener('ids', this.onIds);
   }
 
   render(){
@@ -88,12 +78,6 @@ const styles = StyleSheet.create({
   }
 })
 
-const mapStateToProps = (state) => {
-  return {
-    coinData: state.coinReducer.coinData,
-  };
-}
-
 const mapDispatchToProps = (dispatch) => {
   return {
     setCoin: coinData => dispatch(actions.setCoin(coinData)),
@@ -101,4 +85,4 @@ const mapDispatchToProps = (dispatch) => {
   };
 }
 
-export default withNavigation(connect(mapStateToProps, mapDispatchToProps)(FetchScreen));
+export default withNavigation(connect(null, mapDispatchToProps)(FetchScreen));

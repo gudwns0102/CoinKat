@@ -5,10 +5,9 @@ import axios from 'axios';
 
 import { getHeaderImg } from '../lib';
 
-import { withNavigation } from 'react-navigation';
-
 import { connect } from 'react-redux';
 import * as actions from '../actions';
+import { withNavigation } from 'react-navigation';
 
 import PubSub from 'pubsub-js';
 
@@ -23,9 +22,7 @@ class AvatarSelectScreen extends React.Component {
     this.state = {
       coins: [],
     }
-  }
-
-  componentWillMount(){
+    
     this.props.setNav(this.props.navigation);
     this.token = PubSub.subscribe('CKControllerPress', (msg, data) => {
       PubSub.unsubscribe(this.token);
@@ -34,22 +31,10 @@ class AvatarSelectScreen extends React.Component {
   }
 
   async componentDidMount(){
-
-    var { data } = await axios.get('http://13.125.101.187:1337/all');
-    var coins = [];
-    
-    Object.keys(data).map(exchange => {
-      coins = coins.concat(Object.keys(data[exchange]));
-    })
-
-    coins = coins.filter((item, pos) => {
-      return coins.indexOf(item) == pos;
-    })
+    var { data } = await axios.get('https://api.coinkat.tk/reverseAll');
+    var coins = Object.keys(data);
 
     this.setState({coins});
-  }
-
-  componentWillUnmount(){
   }
 
   handleCoinPress = (coin) => {
@@ -94,7 +79,6 @@ const mapDispatchToProps = (dispatch) => {
   return {
     setAvatar: coinName => dispatch(actions.setAvatar(coinName)),
     setNav: nav => dispatch(actions.setNav(nav))
-
   };
 }
 

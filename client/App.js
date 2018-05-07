@@ -19,27 +19,41 @@ import { Provider } from 'react-redux';
 
 import reducers from './src/reducers';
 import RootNavigator from './src/navigators';
-
-import FCM, { FCMEvent, RemoteNotificationResult } from 'react-native-fcm';
-
-FCM.requestPermissions();
-
-FCM.on(FCMEvent.Notification, notif => {
-  console.log("Noti", notif);
-  FCM.presentLocalNotification({
-    title: notif.fcm.title,
-    body: notif.fcm.body,
-    priority: "high",
-    click_action: notif.fcm.action,
-    show_in_foreground: true,
-    local: true,
-    vibrate: 300,
-  });
-})
+import OneSignal from 'react-native-onesignal';
 
 const store = createStore(reducers);
 
 export default class App extends Component {
+  componentWillMount() {
+    OneSignal.addEventListener('received', this.onReceived);
+    OneSignal.addEventListener('opened', this.onOpened);
+    //OneSignal.addEventListener('ids', this.onIds);
+  }
+
+  componentWillUnmount() {
+    OneSignal.removeEventListener('received', this.onReceived);
+    OneSignal.removeEventListener('opened', this.onOpened);
+    //OneSignal.removeEventListener('ids', this.onIds);
+
+    console.log(OneSignal.getTags())
+  }
+
+  onReceived(notification) {
+    console.log("Notification received: ", notification);
+  }
+
+  onOpened(openResult) {
+    console.log('Message: ', openResult.notification.payload.body);
+    console.log('Data: ', openResult.notification.payload.additionalData);
+    console.log('isActive: ', openResult.notification.isAppInFocus);
+    console.log('openResult: ', openResult);
+  }
+
+  /*
+  onIds(device) {
+    console.log('Device info: ', device);
+  }*/
+
   render() {
     return (
       <Provider store={store}>

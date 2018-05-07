@@ -1,13 +1,12 @@
 import React from 'react'
 import { StyleSheet, View, Text, Alert, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { withNavigation } from 'react-navigation';
+import Parse from 'parse/react-native';
 
 import * as Components from '../components/';
 
 import { connect } from 'react-redux';
 import * as actions from '../actions';
-
-import Parse from 'parse/react-native';
+import { withNavigation } from 'react-navigation';
 
 class BoardScreen extends React.Component {
 
@@ -31,13 +30,18 @@ class BoardScreen extends React.Component {
         this.setState({board: null});
       },
     })
+    console.log(user.get("mobile_onesignal_id"))
   }
 
   render(){
     var { board } = this.state;
 
     if(!board){
-      return <View style={{height:'100%', alignItems:'center', justifyContent:'center'}}><ActivityIndicator /></View>
+      return (
+        <View style={{height:'100%', alignItems:'center', justifyContent:'center'}}>
+          <ActivityIndicator />
+        </View>
+      );
     }
 
     var boardData = board.get("data");

@@ -58,55 +58,28 @@ class PushManager{
   }
 
   async handlePushHit(push){
-    
     var parent = push.get('parent');
     var exchange = push.get('exchange');
     var name = push.get('name');
     var upPrice = push.get('upPrice');
     var downPrice = push.get('downPrice');
-    var pushID = push.get("pushID");
-    //var FCMToken = push.get('FCMToken');
-    //console.log(FCMToken);
     
+    var query = new Parse.Query(Parse.Object.extend("OneSignal"));
+    query.equalTo("parent", parent);
+    var onesignal = await query.first();
+    console.log("onesignal: ", onesignal);
+    var web_id = onesignal.get("web_id");
+    var mobile_id = onesignal.get("mobile_id");
+    var include_player_ids = [web_id, mobile_id];
+
     var { currentPrice } = this.coinData[exchange][name];
 
-    /*
-    var push_data = {
-      to: FCMToken,
-      notification: {
-        title: `${exchange} ${name} Push`,
-        body: `${exchange} ${name}의 현재 가격이 ${currentPrice} 입니다.`,
-        sound: "default",
-        click_action: "FCM_PLUGIN_ACTIVITY",
-        icon: "fcm_push_icon"
-      },
-      priority: "high",
-      // App 패키지 이름
-      restricted_package_name: "com.client",
-      // App에게 전달할 데이터
-      data: {
-        exchange,
-        name,
-      }
-    }
-
-    
-    this.fcm.send(push_data, (err, response) => {
-      if (err) {
-        console.error('Push메시지 발송에 실패했습니다.');
-        console.error(err);
-        return;
-      }
-    
-      console.log('Push메시지가 발송되었습니다.');
-      console.log(response);
-    })*/
-
+    console.log("ids: ", include_player_ids);
 
     var data = {
       app_id: "ae409015-636e-43be-ba61-77aa589cec89",
-      contents: {"en": "English Message"},
-      include_player_ids: [pushID],
+      contents: {"en": `${name} current price is ${currentPrice}!`},
+      include_player_ids,
     }
 
     var headers = {
