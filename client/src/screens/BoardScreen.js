@@ -30,7 +30,6 @@ class BoardScreen extends React.Component {
         this.setState({board: null});
       },
     })
-    console.log(user.get("mobile_onesignal_id"))
   }
 
   render(){
