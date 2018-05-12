@@ -1,13 +1,9 @@
-var FCM = require('fcm-node');
 var Parse = require('parse/node');
-var FCM_KEY= 'AAAAcmJLzBY:APA91bF2x1IhD0HipgY7MY3ovle_fkizJEXJvK8s2kEAP-JPBa31i2zViSAT3OOD3EN84r4MoHat_2llwXiI67y7VkR760oSoSyzcucptu6VRaLY_lJTTYAXQE3Rjp43H_5empiNyjWj'
 var PubSub = require('pubsub-js');
 var { setTimeout } = require('timers');
 
 class PushManager{
   constructor(){
-    this.fcm = new FCM(FCM_KEY);
-
     PubSub.subscribe('responseCoinData', (msg, data) => {
       this.coinData = data;
     })
@@ -58,23 +54,34 @@ class PushManager{
   }
 
   async handlePushHit(push){
+    //Retrieve push data
     var parent = push.get('parent');
     var exchange = push.get('exchange');
     var name = push.get('name');
     var upPrice = push.get('upPrice');
     var downPrice = push.get('downPrice');
-    
+    var registeredAt = push.createdAt;
+
+    //Query onesignal object and push player id 
     var query = new Parse.Query(Parse.Object.extend("OneSignal"));
     query.equalTo("parent", parent);
     var onesignal = await query.first();
-    console.log("onesignal: ", onesignal);
     var web_id = onesignal.get("web_id");
     var mobile_id = onesignal.get("mobile_id");
     var include_player_ids = [web_id, mobile_id];
 
-    var { currentPrice } = this.coinData[exchange][name];
+    //Created push history object
+    var History = Parse.Object.extend("History");
+    var history = new History({
+      parent,
+      exchange,
+      name,
+      upPrice,
+      downPrice,
+      registeredAt,
+    })
 
-    console.log("ids: ", include_player_ids);
+    var { currentPrice } = this.coinData[exchange][name];
 
     var data = {
       app_id: "ae409015-636e-43be-ba61-77aa589cec89",
@@ -100,6 +107,9 @@ class PushManager{
       res.on('data', function(data) {
         console.log("Response:");
         console.log(JSON.parse(data));
+        
+        push.destroy();
+        history.save();
       });
     });
     
@@ -110,15 +120,6 @@ class PushManager{
     
     req.write(JSON.stringify(data));
     req.end();
-
-    await push.destroy({
-      success: obj => {
-        console.log('push Deleted')
-      },
-      error: (obj, err) => {
-        console.log(err);
-      }
-    })
   }
 
   async run(){
